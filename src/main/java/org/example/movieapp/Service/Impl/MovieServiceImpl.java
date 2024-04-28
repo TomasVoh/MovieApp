@@ -3,12 +3,14 @@ package org.example.movieapp.Service.Impl;
 import org.example.movieapp.Dto.PageDto;
 import org.example.movieapp.Mapper.PageMapper;
 import org.example.movieapp.Model.Movie;
+import org.example.movieapp.Repository.GenreRepository;
 import org.example.movieapp.Repository.MovieRepository;
 import org.example.movieapp.Service.MovieService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -42,5 +44,13 @@ public class MovieServiceImpl implements MovieService {
         Movie savedMovie = movieRepository.save(entity);
         logger.trace("saved movie: {}", savedMovie);
         return savedMovie;
+    }
+
+    @Override
+    public PageDto<Movie> findMoviesByGenre(long id, int page, int size) {
+        Page<Movie> movies = movieRepository.findMovieByGenre(id, PageRequest.of(page, size));
+        PageDto<Movie> pageMovies = PageMapper.pageMapper(movies);
+        logger.trace("Paged movies by section : {}", pageMovies);
+        return pageMovies;
     }
 }

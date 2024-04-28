@@ -17,6 +17,7 @@
             <div class="ms-4">
                 <h1 th:text="${movie.name}"></h1>
                 <p th:text="'Délka: ' + ${movie.length} + ' minut'"></p>
+                <p>Žánry: <a class="genre" th:href="@{/movie/genre/{id}(id=${genre.id})}" th:each="genre : ${movie.genres}" th:text="${genre.name} +' '"></a></p>
                 <p th:text="'Datum uvedení: ' + ${movie.releaseDate}"></p>
             </div>
         </div>

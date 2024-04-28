@@ -5,6 +5,22 @@
 main .btn {
     background: #b411d3;
     color: white;
+    transition: 0.3s;
+}
+
+main .genre {
+    color: #b411d3;
+    text-decoration: none;
+}
+
+main .genre:hover {
+    text-decoration: underline;
+}
+
+
+main .btn:hover {
+    background: #550962;
+    color: white;
 }
 
 .placeholder {

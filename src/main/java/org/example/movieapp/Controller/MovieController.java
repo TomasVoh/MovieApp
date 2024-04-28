@@ -1,6 +1,5 @@
 package org.example.movieapp.Controller;
 
-import lombok.extern.java.Log;
 import org.example.movieapp.Dto.PageDto;
 import org.example.movieapp.Model.Genre;
 import org.example.movieapp.Model.Movie;
@@ -9,7 +8,6 @@ import org.example.movieapp.Service.ImageService;
 import org.example.movieapp.Service.MovieService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -64,4 +62,15 @@ public class MovieController {
         movieService.save(movie);
         return "redirect:/movie";
      }
+
+    @GetMapping("/genre/{id}")
+    public String findMoviesByGenre(@RequestParam(required = false, defaultValue = "0", name = "pageNum") int pageNum,
+                                    @RequestParam(required = false, defaultValue = "25", name = "pageSize") int pageSize,
+                                    @PathVariable int id, Model model) {
+        PageDto<Movie> movies = movieService.findMoviesByGenre(id, pageNum, pageSize);
+        Genre genre = genreService.findById(id);
+        model.addAttribute("genre", genre);
+        model.addAttribute("movies", movies);
+        return "movie-genre";
+    }
 }
