@@ -1,0 +1,30 @@
+#nav {
+    background: #b411d3;
+}
+
+main .btn {
+    background: #b411d3;
+    color: white;
+}
+
+.placeholder {
+    background: #b411d3;
+    width: 100%;
+}
+
+.card .badge {
+    background: #b411d3;
+}
+
+.movie-detail div:nth-child(1) {
+    flex: 1.6;
+}
+
+.movie-detail div:nth-child(2) {
+    flex: 3;
+}
+
+.movie-detail div img {
+    flex: 1;
+    width: 100%;
+}

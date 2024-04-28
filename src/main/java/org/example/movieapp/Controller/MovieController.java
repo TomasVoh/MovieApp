@@ -2,7 +2,9 @@ package org.example.movieapp.Controller;
 
 import lombok.extern.java.Log;
 import org.example.movieapp.Dto.PageDto;
+import org.example.movieapp.Model.Genre;
 import org.example.movieapp.Model.Movie;
+import org.example.movieapp.Service.GenreService;
 import org.example.movieapp.Service.ImageService;
 import org.example.movieapp.Service.MovieService;
 import org.slf4j.Logger;
@@ -13,15 +15,19 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/movie")
 public class MovieController {
     private MovieService movieService;
+    private GenreService genreService;
     private ImageService imageService;
     private Logger logger = LoggerFactory.getLogger(MovieController.class);
 
-    public MovieController(MovieService movieService, ImageService imageService) {
+    public MovieController(MovieService movieService, GenreService genreService, ImageService imageService) {
         this.movieService = movieService;
+        this.genreService = genreService;
         this.imageService = imageService;
     }
 
@@ -35,10 +41,19 @@ public class MovieController {
         return "movie-list";
     }
 
+    @GetMapping("/{id}")
+    public String findMovieById(@PathVariable int id, Model model) {
+        Movie movie = movieService.findById(id);
+        model.addAttribute("movie", movie);
+        return "movie-detail";
+    }
+
     @GetMapping("/new")
     public String saveNewMoviePage(Model model) {
         Movie movie = new Movie();
+        List<Genre> genreList = genreService.findAll();
         model.addAttribute("movie", movie);
+        model.addAttribute("genreList", genreList);
         return "movie-new";
     }
 

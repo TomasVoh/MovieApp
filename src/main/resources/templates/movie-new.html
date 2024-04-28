@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
     <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
     <title>Nový film</title>
 </head>
 <body>
@@ -31,8 +32,15 @@
                 <label for="image" class="form-label">Obrázek</label>
                 <input type="file" name="image" class="form-control" id="image">
             </div>
+            <div class="mb-3">
+                <label for="genres" class="form-label">Žánry</label>
+                <select multiple th:field="*{genres}" class="form-control" id="genres">
+                    <option value="0" disabled>Vyberte žánr</option>
+                    <option th:each="genre : ${genreList}" th:text="${genre.name}" th:value="${genre.id}"></option>
+                </select>
+            </div>
             <div class="text-center">
-                <button class="btn btn-primary btn-lg">Přidat film</button>
+                <button class="btn btn-lg">Přidat film</button>
             </div>
         </form>
     </main>

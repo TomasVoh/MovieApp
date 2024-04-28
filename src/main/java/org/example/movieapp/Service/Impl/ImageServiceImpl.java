@@ -18,13 +18,14 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public String saveImage(MultipartFile file) {
         String filePath = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-        Path path = Paths.get("img");
+        Path path = Path.of("src/main/resources/static/img/");
         Path newPath = path.resolve(filePath);
         try {
             Files.copy(file.getInputStream(), newPath, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return newPath.toString();
+        System.out.println(newPath.toString());
+        return "img/" + filePath;
     }
 }

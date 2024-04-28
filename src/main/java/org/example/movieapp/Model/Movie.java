@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "movies")
@@ -26,5 +27,12 @@ public class Movie {
     private int length;
     @Column(nullable = false)
     private String imagePath;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "movie_genres",
+            joinColumns = @JoinColumn(name = "movie_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "id")
+    )
+    private List<Genre> genres;
 
 }
