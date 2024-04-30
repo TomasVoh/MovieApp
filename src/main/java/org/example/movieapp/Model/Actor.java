@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "actors")
@@ -22,4 +23,8 @@ public class Actor {
     private String surname;
     @Column(nullable = false)
     private LocalDate birthday;
+    @Column(nullable = false)
+    private String imagePath;
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "actors")
+    private List<Movie> movies;
 }

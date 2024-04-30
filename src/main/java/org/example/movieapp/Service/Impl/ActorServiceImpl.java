@@ -11,12 +11,26 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
+@Service
 public class ActorServiceImpl implements ActorService{
     private ActorRepository actorRepository;
     private Logger logger = LoggerFactory.getLogger(ActorServiceImpl.class);
+
+    public ActorServiceImpl(ActorRepository actorRepository) {
+        this.actorRepository = actorRepository;
+    }
+
+    @Override
+    public List<Actor> findAll() {
+        List<Actor> actors = actorRepository.findAll();
+        logger.trace("actors: {}", actors);
+        return actors;
+    }
 
     @Override
     public PageDto<Actor> findAllByPage(int page, int size) {
@@ -35,6 +49,8 @@ public class ActorServiceImpl implements ActorService{
 
     @Override
     public Actor save(Actor entity) {
-        return null;
+        Actor actor = actorRepository.save(entity);
+        logger.trace("savedActor: {}", actor);
+        return actor;
     }
 }

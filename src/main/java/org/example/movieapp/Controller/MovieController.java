@@ -1,8 +1,10 @@
 package org.example.movieapp.Controller;
 
 import org.example.movieapp.Dto.PageDto;
+import org.example.movieapp.Model.Actor;
 import org.example.movieapp.Model.Genre;
 import org.example.movieapp.Model.Movie;
+import org.example.movieapp.Service.ActorService;
 import org.example.movieapp.Service.GenreService;
 import org.example.movieapp.Service.ImageService;
 import org.example.movieapp.Service.MovieService;
@@ -20,12 +22,14 @@ import java.util.List;
 public class MovieController {
     private MovieService movieService;
     private GenreService genreService;
+    private ActorService actorService;
     private ImageService imageService;
     private Logger logger = LoggerFactory.getLogger(MovieController.class);
 
-    public MovieController(MovieService movieService, GenreService genreService, ImageService imageService) {
+    public MovieController(MovieService movieService, GenreService genreService, ActorService actorService, ImageService imageService) {
         this.movieService = movieService;
         this.genreService = genreService;
+        this.actorService = actorService;
         this.imageService = imageService;
     }
 
@@ -49,8 +53,10 @@ public class MovieController {
     @GetMapping("/new")
     public String saveNewMoviePage(Model model) {
         Movie movie = new Movie();
+        List<Actor> actors = actorService.findAll();
         List<Genre> genreList = genreService.findAll();
         model.addAttribute("movie", movie);
+        model.addAttribute("actors", actors);
         model.addAttribute("genreList", genreList);
         return "movie-new";
     }
