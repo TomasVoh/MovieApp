@@ -8,12 +8,12 @@ main .btn {
     transition: 0.3s;
 }
 
-main .genre {
+main .ref {
     color: #b411d3;
     text-decoration: none;
 }
 
-main .genre:hover {
+main .ref:hover {
     text-decoration: underline;
 }
 

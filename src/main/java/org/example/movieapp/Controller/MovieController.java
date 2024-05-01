@@ -2,12 +2,10 @@ package org.example.movieapp.Controller;
 
 import org.example.movieapp.Dto.PageDto;
 import org.example.movieapp.Model.Actor;
+import org.example.movieapp.Model.Country;
 import org.example.movieapp.Model.Genre;
 import org.example.movieapp.Model.Movie;
-import org.example.movieapp.Service.ActorService;
-import org.example.movieapp.Service.GenreService;
-import org.example.movieapp.Service.ImageService;
-import org.example.movieapp.Service.MovieService;
+import org.example.movieapp.Service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -23,13 +21,15 @@ public class MovieController {
     private MovieService movieService;
     private GenreService genreService;
     private ActorService actorService;
+    private CountryService countryService;
     private ImageService imageService;
     private Logger logger = LoggerFactory.getLogger(MovieController.class);
 
-    public MovieController(MovieService movieService, GenreService genreService, ActorService actorService, ImageService imageService) {
+    public MovieController(MovieService movieService, GenreService genreService, ActorService actorService, CountryService countryService, ImageService imageService) {
         this.movieService = movieService;
         this.genreService = genreService;
         this.actorService = actorService;
+        this.countryService = countryService;
         this.imageService = imageService;
     }
 
@@ -55,6 +55,8 @@ public class MovieController {
         Movie movie = new Movie();
         List<Actor> actors = actorService.findAll();
         List<Genre> genreList = genreService.findAll();
+        List<Country> countries = countryService.findAll();
+        model.addAttribute("countries", countries);
         model.addAttribute("movie", movie);
         model.addAttribute("actors", actors);
         model.addAttribute("genreList", genreList);
@@ -78,5 +80,16 @@ public class MovieController {
         model.addAttribute("genre", genre);
         model.addAttribute("movies", movies);
         return "movie-genre";
+    }
+
+    @GetMapping("/country/{id}")
+    public String findMovieByCountry(@RequestParam(required = false, defaultValue = "0", name = "pageNum") int pageNum,
+            @RequestParam(required = false, defaultValue = "25", name = "pageSize") int pageSize,
+            @PathVariable int id, Model model) {
+        Country country = countryService.findById(id);
+        PageDto<Movie> movies = movieService.findMovieByCountry(id, pageNum, pageSize);
+        model.addAttribute("country", country);
+        model.addAttribute("movies", movies);
+        return "movie-country";
     }
 }

@@ -28,6 +28,13 @@
             <label for="image" class="form-label">Fotka herce</label>
             <input type="file" name="image" class="form-control" id="image">
         </div>
+        <div class="mb-3">
+            <label for="countries" class="form-label">Země, odkud herec pochází</label>
+            <select multiple class="form-control" th:field="*{countries}" id="countries">
+                <option disabled value="0">Zvolit zemi/ě</option>
+                <option th:each="country : ${countryList}" th:text="${country.code}" th:value="${country.id}"></option>
+            </select>
+        </div>
         <div class="text-center">
             <button class="btn btn-lg">Přidat Herce</button>
         </div>

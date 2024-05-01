@@ -7,4 +7,5 @@ import org.springframework.data.domain.Pageable;
 
 public interface MovieService extends PageReadAndWriteService<Movie>{
     PageDto<Movie> findMoviesByGenre(long id, int page, int size);
+    PageDto<Movie> findMovieByCountry(long id, int page, int size);
 }

@@ -27,4 +27,11 @@ public class Actor {
     private String imagePath;
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "actors")
     private List<Movie> movies;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "actor_countries",
+            joinColumns = @JoinColumn(name = "actor_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "country_id", referencedColumnName = "id")
+    )
+    private List<Country> countries;
 }

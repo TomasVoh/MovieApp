@@ -2,21 +2,27 @@ package org.example.movieapp.Controller;
 
 import org.example.movieapp.Dto.PageDto;
 import org.example.movieapp.Model.Actor;
+import org.example.movieapp.Model.Country;
 import org.example.movieapp.Service.ActorService;
+import org.example.movieapp.Service.CountryService;
 import org.example.movieapp.Service.ImageService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/actor")
 public class ActorController {
     private ActorService actorService;
+    private CountryService countryService;
     private ImageService imageService;
 
-    public ActorController(ActorService actorService, ImageService imageService) {
+    public ActorController(ActorService actorService, CountryService countryService, ImageService imageService) {
         this.actorService = actorService;
+        this.countryService = countryService;
         this.imageService = imageService;
     }
 
@@ -29,10 +35,19 @@ public class ActorController {
         return "actors-list";
     }
 
+    @GetMapping("/{id}")
+    public String findActorById(@PathVariable("id") int id, Model model) {
+        Actor actor = actorService.findById(id);
+        model.addAttribute("actor", actor);
+        return "actor-detail";
+    }
+
     @GetMapping("/new")
     public String saveActorPage(Model model) {
         Actor actor = new Actor();
+        List<Country> countryList = countryService.findAll();
         model.addAttribute("actor", actor);
+        model.addAttribute("countryList", countryList);
         return "actor-new";
     }
 

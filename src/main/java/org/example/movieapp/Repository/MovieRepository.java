@@ -11,4 +11,6 @@ import org.springframework.data.repository.query.Param;
 public interface MovieRepository extends JpaRepository<Movie, Long> {
     @Query("SELECT m FROM Movie m JOIN m.genres g WHERE g.id = :id")
     Page<Movie> findMovieByGenre(@Param("id") Long id, Pageable pageable);
+    @Query("SELECT m FROM Movie m JOIN m.countries c WHERE c.id = :id")
+    Page<Movie> findMovieByCountry(@Param("id") Long id, Pageable pageable);
 }

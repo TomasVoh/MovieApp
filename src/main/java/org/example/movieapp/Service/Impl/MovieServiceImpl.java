@@ -53,4 +53,12 @@ public class MovieServiceImpl implements MovieService {
         logger.trace("Paged movies by section : {}", pageMovies);
         return pageMovies;
     }
+
+    @Override
+    public PageDto<Movie> findMovieByCountry(long id, int page, int size) {
+        Page<Movie> movies = movieRepository.findMovieByCountry(id, PageRequest.of(page, size));
+        PageDto<Movie> pageMovies = PageMapper.pageMapper(movies);
+        logger.trace("Paged movies by country : {}", pageMovies);
+        return pageMovies;
+    }
 }

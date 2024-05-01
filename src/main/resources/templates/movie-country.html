@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
+    <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <title th:text="${country.name}"></title>
+</head>
+<div th:replace="~{fragments/nav.html :: header}"></div>
+<main class="container my-2">
+    <h1 class="text-center" th:text="'Země ' + ${country.name}"></h1>
+    <div class="placeholder col-12"></div>
+    <div class="row row-cols-3">
+        <div th:each="movie : ${movies.content}" class="card p-0 mx-2 mb-3 overflow-hidden" style="width: 18rem;">
+            <div class="card-header">
+                Žánry:
+                <span th:each="genre : ${movie.getGenres()}" th:text="${genre.name}" class="badge mx-1"></span>
+            </div>
+            <img th:src="@{/{path}(path=${movie.imagePath})}" class="card-img-top" alt="film">
+            <div class="card-body">
+                <h5 class="card-title" th:text="${movie.name}"></h5>
+                <a th:href="@{/movie/{id}(id=${movie.id})}" class="btn">Zobrazit detail</a>
+            </div>
+        </div>
+    </div>
+</main>
+</html>

@@ -41,5 +41,12 @@ public class Movie {
             inverseJoinColumns = @JoinColumn(name = "actor_id", referencedColumnName = "id")
     )
     private List<Actor> actors;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "movies_country",
+            joinColumns = @JoinColumn(name = "movie_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "country_id", referencedColumnName = "id")
+    )
+    private List<Country> countries;
 
 }

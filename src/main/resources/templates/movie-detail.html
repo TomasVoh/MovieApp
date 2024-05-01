@@ -17,8 +17,11 @@
             <div class="ms-4">
                 <h1 th:text="${movie.name}"></h1>
                 <p th:text="'Délka: ' + ${movie.length} + ' minut'"></p>
-                <p>Žánry: <a class="genre" th:href="@{/movie/genre/{id}(id=${genre.id})}" th:each="genre : ${movie.genres}" th:text="${genre.name} +' '"></a></p>
-                <p th:text="'Datum uvedení: ' + ${movie.releaseDate}"></p>
+                <p>Žánry: <a class="ref" th:href="@{/movie/genre/{id}(id=${genre.id})}" th:each="genre : ${movie.genres}" th:text="${genre.name} +' '"></a></p>
+                <p>Herci: <a class="ref" th:href="@{/actor/{id}(id=${actor.id})}" th:each="actor : ${movie.actors}" th:text="${actor.name} + ' ' + ${actor.surname} + ' '"></a></p>
+                <p>Stát: <a th:href="@{/movie/country/{id}(id=${country.id})}" class="ref" th:each="country : ${movie.countries}" th:text="${country.code} + ' '"></a></p>
+
+                <p th:text="'Datum uvedení: ' + ${#temporals.format(movie.releaseDate, 'dd. MM. yyyy')}"></p>
             </div>
         </div>
         <div class="my-2">

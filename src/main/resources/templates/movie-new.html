@@ -5,6 +5,7 @@
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
     <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script type="text/javascript" defer th:src="@{/script/search.js}"></script>
     <title>Nový film</title>
 </head>
 <body>
@@ -41,9 +42,17 @@
             </div>
             <div class="mb-3">
                 <label class="form-label" for="actors">Herci</label>
+                <input id="findActors" type="text" class=" mb-2 form-control" placeholder="vyhledat herce">
                 <select class="form-control" th:field="*{actors}" multiple id="actors">
                     <option value="0" disabled>Vyberte herce</option>
                     <option th:each="actor : ${actors}" th:text="${actor.name} + ' ' + ${actor.surname}" th:value="${actor.id}"></option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="countries" class="form-label">Země vzniku</label>
+                <select multiple id="countries" th:field="*{countries}" class="form-control">
+                    <option value="0" disabled>Vyberte země vzniku</option>
+                    <option th:each="country : ${countries}" th:text="${country.code}" th:value="${country.id}"></option>
                 </select>
             </div>
             <div class="text-center">
