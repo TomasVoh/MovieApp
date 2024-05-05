@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
+    <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <title th:text="${director.name} + ' ' + ${director.surname}"></title>
+</head>
+<body>
+<div th:replace="~{fragments/nav.html :: header}"></div>
+<main class="container">
+    <div class="card my-3">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <img th:src="@{/{path}(path=${director.imagePath})}" class="img-fluid rounded-start" alt="herec">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 th:text="${director.name} + ' ' + ${director.surname}" class="card-title"></h5>
+                    <p>Národnost: <a th:each="country : ${director.countries}" th:text="${country.code} + ' '"></a></p>
+                    <p class="card-text" th:text="'Datum narození: ' + ${#temporals.format(director.dateOfBirth, 'dd. MM. yyyy')}"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

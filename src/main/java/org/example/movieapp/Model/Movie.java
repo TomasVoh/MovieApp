@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.userdetails.User;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -48,5 +49,7 @@ public class Movie {
             inverseJoinColumns = @JoinColumn(name = "country_id", referencedColumnName = "id")
     )
     private List<Country> countries;
+    @ManyToMany(mappedBy = "movies", fetch = FetchType.LAZY)
+    private List<UserEntity> users;
 
 }

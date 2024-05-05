@@ -10,6 +10,9 @@
 <body>
     <div th:replace="~{fragments/nav.html :: header}"></div>
     <main class="container my-2 ">
+        <form th:action="@{/favourite/movie/{id}(id=${movie.id})}" method="POST">
+            <button type="submit" class="btn mb-3" >Přidat do oblíbených</button>
+        </form>
         <div class="d-flex flex-row movie-detail">
             <div class="">
                 <img class="" th:src="@{/{path}(path=${movie.imagePath})}" alt="film-plakat" >

@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -41,4 +40,12 @@ public class UserEntity {
             inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id")
     )
     private List<Authority> authorities;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "users_favourity_movies",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "movie_id", referencedColumnName = "id")
+    )
+    private List<Movie> movies;
+
 }

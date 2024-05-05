@@ -25,4 +25,6 @@ public class Country {
     private List<Actor> actors;
     @ManyToMany(mappedBy = "countries", fetch = FetchType.LAZY)
     private List<Movie> movies;
+    @ManyToMany(mappedBy = "countries", fetch = FetchType.LAZY)
+    private List<Director> directors;
 }

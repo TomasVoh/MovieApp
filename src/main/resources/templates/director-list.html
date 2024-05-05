@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
+    <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <title>Režiséři</title>
+</head>
+<body>
+<div th:replace="~{fragments/nav.html :: header}"></div>
+<main class="container my-2">
+    <a href="/director/new" class="btn my-1">Přidat režiséra</a>
+    <div class="row row-cols-3">
+        <div th:each="director : ${directorsPage.content}" class="card p-0 mx-2 mb-3 overflow-hidden" style="width: 18rem;">
+            <img th:src="@{/{path}(path=${director.imagePath})}" class="card-img-top" alt="herec">
+            <div class="card-body">
+                <h5 class="card-title" th:text="${director.name} + ' ' + ${director.surname}"></h5>
+                <a class="btn" th:href="@{/director/{id}(id=${director.id})}">Zobrazit detail</a>
+            </div>
+        </div>
+    </div>
+
+</main>
+</body>
+</html>
