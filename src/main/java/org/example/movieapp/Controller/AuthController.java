@@ -37,14 +37,20 @@ public class AuthController {
         return "redirect:/login";
     }
 
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
+
     @PostMapping("/favourite/movie/{id}")
     public String addToFavouriteMovie(@PathVariable("id") long id, Principal principal) {
         userEntityService.addToFavouriteMovie(id, principal.getName());
         return String.format("redirect:/movie/%d", id);
     }
 
-    @GetMapping("/login")
-    public String login() {
-        return "login";
+    @PostMapping("/rmFavourite/movie/{id}")
+    public String removeFromFavouriteMovie(@PathVariable("id") long id, Principal principal) {
+        userEntityService.removeFromFavouriteMovie(id, principal.getName());
+        return String.format("redirect:/movie/%d", id);
     }
 }

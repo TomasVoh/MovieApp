@@ -51,5 +51,12 @@ public class Movie {
     private List<Country> countries;
     @ManyToMany(mappedBy = "movies", fetch = FetchType.LAZY)
     private List<UserEntity> users;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "directors_movies",
+            joinColumns = @JoinColumn(name = "movie_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "director_id", referencedColumnName = "id")
+    )
+    private List<Director> directors;
 
 }

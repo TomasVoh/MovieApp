@@ -8,4 +8,5 @@ public interface UserEntityService extends PageReadAndWriteService<UserEntity>{
     void registerUser(RegisterDto registerDto);
     UserEntity findUserByEmail(String email);
     void addToFavouriteMovie(long movieId, String userEmail);
+    void removeFromFavouriteMovie(long movieId, String userEmail);
 }

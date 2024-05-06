@@ -32,4 +32,6 @@ public class Director {
             inverseJoinColumns = @JoinColumn(name = "country_id", referencedColumnName = "id")
     )
     private List<Country> countries;
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "directors")
+    private List<Movie> movies;
 }

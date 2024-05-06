@@ -75,4 +75,12 @@ public class UserEntityServiceImpl implements UserEntityService {
         userEntity.getMovies().add(movie);
         save(userEntity);
     }
+
+    @Override
+    public void removeFromFavouriteMovie(long movieId, String userEmail) {
+        Movie movie = movieRepository.findById(movieId).orElseThrow(NoSuchElementException::new);
+        UserEntity userEntity = findUserByEmail(userEmail);
+        userEntity.getMovies().remove(movie);
+        save(userEntity);
+    }
 }

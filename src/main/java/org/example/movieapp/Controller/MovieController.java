@@ -1,10 +1,7 @@
 package org.example.movieapp.Controller;
 
 import org.example.movieapp.Dto.PageDto;
-import org.example.movieapp.Model.Actor;
-import org.example.movieapp.Model.Country;
-import org.example.movieapp.Model.Genre;
-import org.example.movieapp.Model.Movie;
+import org.example.movieapp.Model.*;
 import org.example.movieapp.Service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -20,14 +18,18 @@ import java.util.List;
 public class MovieController {
     private MovieService movieService;
     private GenreService genreService;
+    private UserEntityService userEntityService;
+    private DirectorService directorService;
     private ActorService actorService;
     private CountryService countryService;
     private ImageService imageService;
     private Logger logger = LoggerFactory.getLogger(MovieController.class);
 
-    public MovieController(MovieService movieService, GenreService genreService, ActorService actorService, CountryService countryService, ImageService imageService) {
+    public MovieController(MovieService movieService, GenreService genreService, UserEntityService userEntityService, DirectorService directorService, ActorService actorService, CountryService countryService, ImageService imageService) {
         this.movieService = movieService;
         this.genreService = genreService;
+        this.userEntityService = userEntityService;
+        this.directorService = directorService;
         this.actorService = actorService;
         this.countryService = countryService;
         this.imageService = imageService;
@@ -44,8 +46,12 @@ public class MovieController {
     }
 
     @GetMapping("/{id}")
-    public String findMovieById(@PathVariable int id, Model model) {
+    public String findMovieById(@PathVariable int id, Model model, Principal principal) {
         Movie movie = movieService.findById(id);
+        if(principal != null) {
+            UserEntity userEntity = userEntityService.findUserByEmail(principal.getName());
+            model.addAttribute("user", userEntity);
+        }
         model.addAttribute("movie", movie);
         return "movie-detail";
     }
@@ -56,6 +62,8 @@ public class MovieController {
         List<Actor> actors = actorService.findAll();
         List<Genre> genreList = genreService.findAll();
         List<Country> countries = countryService.findAll();
+        List<Director> directors = directorService.findAll();
+        model.addAttribute("directors", directors);
         model.addAttribute("countries", countries);
         model.addAttribute("movie", movie);
         model.addAttribute("actors", actors);

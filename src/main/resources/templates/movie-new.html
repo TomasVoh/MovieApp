@@ -41,6 +41,13 @@
                 </select>
             </div>
             <div class="mb-3">
+                <label class="form-label" for="directors">Herci</label>
+                <select class="form-control" th:field="*{directors}" multiple id="directors">
+                    <option value="0" disabled>Vyberte herce</option>
+                    <option th:each="director : ${directors}" th:text="${director.name} + ' ' + ${director.surname}" th:value="${director.id}"></option>
+                </select>
+            </div>
+            <div class="mb-3">
                 <label class="form-label" for="actors">Herci</label>
                 <input id="findActors" type="text" class=" mb-2 form-control" placeholder="vyhledat herce">
                 <select class="form-control" th:field="*{actors}" multiple id="actors">

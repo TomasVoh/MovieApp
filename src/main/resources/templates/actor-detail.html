@@ -24,7 +24,15 @@
                 </div>
             </div>
         </div>
-
+        <h2>Hercovi filmy</h2>
+        <div class="card">
+            <div class="card-body">
+                <div th:each="movie : ${actor.movies}" class="d-flex justify-content-between">
+                    <a class="ref" th:href="@{/movie/{id}(id=${movie.id})}" th:text="${movie.name}"></a>
+                    <p th:text="'uvedení: ' + ${#temporals.format(movie.releaseDate, 'dd. MM. yyyy')}"></p>
+                </div>
+            </div>
+        </div>
     </main>
 </body>
 </html>

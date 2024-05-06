@@ -10,9 +10,14 @@
 <body>
     <div th:replace="~{fragments/nav.html :: header}"></div>
     <main class="container my-2 ">
-        <form th:action="@{/favourite/movie/{id}(id=${movie.id})}" method="POST">
-            <button type="submit" class="btn mb-3" >Přidat do oblíbených</button>
-        </form>
+        <div sec:authorize="isAuthenticated()">
+            <form th:if="${!user.getMovies().contains(movie)}" th:action="@{/favourite/movie/{id}(id=${movie.id})}" method="POST">
+                <button type="submit" class="btn mb-3" >Přidat do oblíbených</button>
+            </form>
+            <form method="POST" th:unless="${!user.getMovies().contains(movie)}" th:action="@{/rmFavourite/movie/{id}(id=${movie.id})}">
+                <button type="submit" class="btn mb-3" >Odebrat z oblíbených</button>
+            </form>
+        </div>
         <div class="d-flex flex-row movie-detail">
             <div class="">
                 <img class="" th:src="@{/{path}(path=${movie.imagePath})}" alt="film-plakat" >
@@ -21,9 +26,9 @@
                 <h1 th:text="${movie.name}"></h1>
                 <p th:text="'Délka: ' + ${movie.length} + ' minut'"></p>
                 <p>Žánry: <a class="ref" th:href="@{/movie/genre/{id}(id=${genre.id})}" th:each="genre : ${movie.genres}" th:text="${genre.name} +' '"></a></p>
+                <p>Režisér: <a class="ref" th:href="@{/director/{id}(id=${director.id})}" th:each="director : ${movie.directors}" th:text="${director.name} + ' ' + ${director.surname}"></a></p>
                 <p>Herci: <a class="ref" th:href="@{/actor/{id}(id=${actor.id})}" th:each="actor : ${movie.actors}" th:text="${actor.name} + ' ' + ${actor.surname} + ' '"></a></p>
                 <p>Stát: <a th:href="@{/movie/country/{id}(id=${country.id})}" class="ref" th:each="country : ${movie.countries}" th:text="${country.code} + ' '"></a></p>
-
                 <p th:text="'Datum uvedení: ' + ${#temporals.format(movie.releaseDate, 'dd. MM. yyyy')}"></p>
             </div>
         </div>

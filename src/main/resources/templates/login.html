@@ -5,6 +5,7 @@
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
     <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script type="text/javascript" defer th:src="@{/script/validation.js}"></script>
     <title>Přihlášení</title>
 </head>
 <body>
@@ -14,11 +15,23 @@
             <h1 class="text-center">Přihlášení</h1>
             <div class="mb-3">
                 <label class="form-label" for="email">Email</label>
-                <input class="form-control" id="email" type="email" name="username">
+                <input class="form-control" id="email" type="email" name="username" required>
+                <div class="invalid-feedback">
+                    Zadejte email, který bude obsahovat znak @
+                </div>
+                <div class="valid-feedback">
+                    Ok
+                </div>
             </div>
             <div class="mb-3">
                 <label class="form-label" for="password">Heslo</label>
                 <input class="form-control" type="password" id="password" name="password">
+                <div class="invalid-feedback">
+                    Zadejte heslo
+                </div>
+                <div class="valid-feedback">
+                    Ok
+                </div>
             </div>
             <div class="text-center">
                 <button type="submit" value="Log in" class="btn">Přihlásit se</button>

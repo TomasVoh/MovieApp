@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -42,5 +43,10 @@ public class DirectorServiceImpl implements DirectorService {
         Director savedDirector = directorRepository.save(entity);
         logger.trace("savedDirector: {}", savedDirector);
         return savedDirector;
+    }
+
+    @Override
+    public List<Director> findAll() {
+        return directorRepository.findAll();
     }
 }
