@@ -58,5 +58,6 @@ public class Movie {
             inverseJoinColumns = @JoinColumn(name = "director_id", referencedColumnName = "id")
     )
     private List<Director> directors;
-
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "movie")
+    private List<Review> reviews;
 }

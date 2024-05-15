@@ -47,5 +47,7 @@ public class UserEntity {
             inverseJoinColumns = @JoinColumn(name = "movie_id", referencedColumnName = "id")
     )
     private List<Movie> movies;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<Review> reviews;
 
 }

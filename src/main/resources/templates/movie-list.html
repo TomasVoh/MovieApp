@@ -10,7 +10,7 @@
 <body>
     <div th:replace="~{fragments/nav.html :: header}"></div>
     <main class="container my-2">
-        <a href="/movie/new" class="btn my-1">Přidat nový film</a>
+        <a href="/movie/new" sec:authorize="hasAnyAuthority('ADMIN')" class="btn my-1">Přidat nový film</a>
         <div class="row row-cols-3">
             <div th:each="movie : ${movies.content}" class="card p-0 mx-2 mb-3 overflow-hidden" style="width: 18rem;">
                 <div class="card-header">

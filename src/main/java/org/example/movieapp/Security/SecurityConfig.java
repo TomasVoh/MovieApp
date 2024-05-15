@@ -23,6 +23,10 @@ public class SecurityConfig {
                             .loginProcessingUrl("/login")
                             .failureUrl("/login?error")
                             .defaultSuccessUrl("/movie", true);
+                })
+                .logout((out) -> {
+                    out.logoutUrl("/logout")
+                            .logoutSuccessUrl("/movie");
                 });
         return http.build();
     }

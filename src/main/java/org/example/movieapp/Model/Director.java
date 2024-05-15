@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name = "directory")
+@Table(name = "directors")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

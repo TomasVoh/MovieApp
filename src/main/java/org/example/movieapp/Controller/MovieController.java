@@ -5,6 +5,8 @@ import org.example.movieapp.Model.*;
 import org.example.movieapp.Service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,7 @@ import java.util.List;
 public class MovieController {
     private MovieService movieService;
     private GenreService genreService;
+    private ReviewService reviewService;
     private UserEntityService userEntityService;
     private DirectorService directorService;
     private ActorService actorService;
@@ -25,9 +28,10 @@ public class MovieController {
     private ImageService imageService;
     private Logger logger = LoggerFactory.getLogger(MovieController.class);
 
-    public MovieController(MovieService movieService, GenreService genreService, UserEntityService userEntityService, DirectorService directorService, ActorService actorService, CountryService countryService, ImageService imageService) {
+    public MovieController(MovieService movieService, GenreService genreService, ReviewService reviewService, UserEntityService userEntityService, DirectorService directorService, ActorService actorService, CountryService countryService, ImageService imageService) {
         this.movieService = movieService;
         this.genreService = genreService;
+        this.reviewService = reviewService;
         this.userEntityService = userEntityService;
         this.directorService = directorService;
         this.actorService = actorService;
@@ -48,7 +52,7 @@ public class MovieController {
     @GetMapping("/{id}")
     public String findMovieById(@PathVariable int id, Model model, Principal principal) {
         Movie movie = movieService.findById(id);
-        if(principal != null) {
+        if (principal != null) {
             UserEntity userEntity = userEntityService.findUserByEmail(principal.getName());
             model.addAttribute("user", userEntity);
         }
@@ -57,6 +61,7 @@ public class MovieController {
     }
 
     @GetMapping("/new")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public String saveNewMoviePage(Model model) {
         Movie movie = new Movie();
         List<Actor> actors = actorService.findAll();
@@ -72,12 +77,13 @@ public class MovieController {
     }
 
     @PostMapping("/new")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public String saveMovie(@ModelAttribute("movie") Movie movie, @RequestParam("image") MultipartFile image) {
         String filePath = imageService.saveImage(image);
         movie.setImagePath(filePath);
         movieService.save(movie);
         return "redirect:/movie";
-     }
+    }
 
     @GetMapping("/genre/{id}")
     public String findMoviesByGenre(@RequestParam(required = false, defaultValue = "0", name = "pageNum") int pageNum,
@@ -92,12 +98,31 @@ public class MovieController {
 
     @GetMapping("/country/{id}")
     public String findMovieByCountry(@RequestParam(required = false, defaultValue = "0", name = "pageNum") int pageNum,
-            @RequestParam(required = false, defaultValue = "25", name = "pageSize") int pageSize,
-            @PathVariable int id, Model model) {
+                                     @RequestParam(required = false, defaultValue = "25", name = "pageSize") int pageSize,
+                                     @PathVariable int id, Model model) {
         Country country = countryService.findById(id);
         PageDto<Movie> movies = movieService.findMovieByCountry(id, pageNum, pageSize);
         model.addAttribute("country", country);
         model.addAttribute("movies", movies);
         return "movie-country";
+    }
+
+    @GetMapping("/{id}/review")
+    public String saveReviewPage(@PathVariable("id") long id, Model model) {
+        Review review = new Review();
+        Movie movie = movieService.findById(id);
+        model.addAttribute("review", review);
+        model.addAttribute("movie", movie);
+        return "review-new";
+    }
+
+    @PostMapping("/{id}/review")
+    public String saveReview(@PathVariable("id") long id, @ModelAttribute("review") Review review, Principal principal) {
+        UserEntity userEntity = userEntityService.findUserByEmail(principal.getName());
+        Movie movie = movieService.findById(id);
+        review.setMovie(movie);
+        review.setUser(userEntity);
+        reviewService.save(review);
+        return String.format("redirect:/movie/%d", id);
     }
 }
