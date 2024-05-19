@@ -22,16 +22,15 @@
                     <p class="card-text" th:text="'Datum narození: ' + ${#temporals.format(director.dateOfBirth, 'dd. MM. yyyy')}"></p>
                 </div>
             </div>
-            <h2>Režisérovy filmy</h2>
-            <div class="card">
-                <div class="card-body">
-                    <div th:each="movie : ${director.movies}" class="d-flex justify-content-between">
-                        <a class="ref" th:href="@{/movie/{id}(id=${movie.id})}" th:text="${movie.name}"></a>
-                        <p th:text="'uvedení: ' + ${#temporals.format(movie.releaseDate, 'dd. MM. yyyy')}"></p>
-                    </div>
-                </div>
+        </div>
+    </div>
+    <h2>Režisérovy filmy</h2>
+    <div class="card">
+        <div class="card-body">
+            <div th:each="movie : ${director.movies}" class="d-flex justify-content-between">
+                <a class="ref" th:href="@{/movie/{id}(id=${movie.id})}" th:text="${movie.name}"></a>
+                <p th:text="'uvedení: ' + ${#temporals.format(movie.releaseDate, 'dd. MM. yyyy')}"></p>
             </div>
-
         </div>
     </div>
 </main>

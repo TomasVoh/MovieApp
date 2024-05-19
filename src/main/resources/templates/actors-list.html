@@ -10,17 +10,18 @@
 <body>
     <div th:replace="~{fragments/nav.html :: header}"></div>
     <main class="container my-2">
-        <a href="/actor/new" class="btn my-1">Přidat herce</a>
-        <div class="row row-cols-3">
-            <div th:each="actor : ${actorsPage.content}" class="card p-0 mx-2 mb-3 overflow-hidden" style="width: 18rem;">
-                <img th:src="@{/{path}(path=${actor.imagePath})}" class="card-img-top" alt="herec">
-                <div class="card-body">
-                    <h5 class="card-title" th:text="${actor.name} + ' ' + ${actor.surname}"></h5>
-                    <a class="btn" th:href="@{/actor/{id}(id=${actor.id})}">Zobrazit detail</a>
+        <div>
+            <a href="/actor/new" sec:authorize="hasAnyAuthority('ADMIN')" class="btn my-1">Přidat herce</a>
+            <div class="content-block row row-cols-3">
+                <div th:each="actor : ${actorsPage.content}" class="card p-0 mx-2 mb-3 overflow-hidden" style="width: 18rem;">
+                    <img th:src="@{/{path}(path=${actor.imagePath})}" class="card-img-top" alt="herec">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${actor.name} + ' ' + ${actor.surname}"></h5>
+                        <a class="btn" th:href="@{/actor/{id}(id=${actor.id})}">Zobrazit detail</a>
+                    </div>
                 </div>
             </div>
         </div>
-
     </main>
 </body>
 </html>

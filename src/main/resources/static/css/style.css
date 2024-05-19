@@ -1,15 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+* {
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    background: #3f3e3e;
+}
+
 #nav {
-    background: #b411d3;
+    background: #1d191d;
+    padding: 20px;
+}
+
+.navbar-brand {
+    background: #ebeb05;
+    border-radius: 20px;
+    padding: 10px;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 600;
+    color: black;
+}
+
+h1 {
+    color: white;
+}
+
+h2 {
+    color: white;
+}
+
+label {
+    color: white;
+}
+
+.form-control {
+    background: black;
+    border: none;
+    color: white;
+    border-radius: 0px;
+    transition: 0.5s;
+    border-bottom: 3px solid black;
+}
+.form-control:focus {
+    background: black;
+    box-shadow: none;
+    color: white;
+    border-bottom: 3px solid white;
 }
 
 main .btn {
-    background: #b411d3;
-    color: white;
+    background: #ebeb05;
     transition: 0.3s;
+    font-weight: 500;
 }
 
 main .ref {
-    color: #b411d3;
+    color: #ebeb05;
     text-decoration: none;
 }
 
@@ -19,17 +66,39 @@ main .ref:hover {
 
 
 main .btn:hover {
-    background: #550962;
+    background: black;
     color: white;
 }
 
 .placeholder {
-    background: #b411d3;
+    background: #1d191d;
     width: 100%;
 }
 
+.card-header {
+    background: #1d191d;
+    color: white;
+}
+
+.card-body {
+    background: #1d191d;
+    color: white;
+    border-radius: 10px;
+}
+
 .card .badge {
-    background: #b411d3;
+    background: #ebeb05;
+    color: black;
+}
+
+.card {
+    background: #1d191d;
+}
+
+.page {
+    padding: 10px;
+    background: #1d191d;
+    color: white;
 }
 
 .movie-detail div:nth-child(1) {
@@ -43,4 +112,36 @@ main .btn:hover {
 .movie-detail div img {
     flex: 1;
     width: 100%;
+}
+
+.rating {
+    padding: 30px;
+    background: #ebeb05;
+    border-radius: 20px;
+    font-size: 2.2rem;
+    display: flex;
+    justify-content: center;
+    font-weight: 700;
+}
+
+.search-btn {
+    color: black;
+    background: #ebeb05;
+    transition: 0.5s;
+    font-weight: 500;
+}
+
+.search-btn:hover {
+    color: white;
+    background: black;
+}
+
+.content {
+    font-size: 0.85rem;
+    text-align: justify;
+}
+
+.content-block {
+    display: flex;
+    justify-content: center;
 }

@@ -10,7 +10,7 @@
 <body>
 <div th:replace="~{fragments/nav.html :: header}"></div>
 <main class="container my-2">
-    <h3 class="mx-3 text-center" th:text="'Přidání recenze k filmu ' + ${movie.name}"></h3>
+    <h1 class="mx-3 text-center" th:text="'Přidání recenze k filmu ' + ${movie.name}"></h1>
     <form method="POST" th:action="@{/movie/{id}/review(id=${movie.id})}" th:object="${review}">
         <div class="my-2">
             <label for="rating">Hodnocení</label>

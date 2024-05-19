@@ -18,23 +18,42 @@
                 <button type="submit" class="btn mb-3" >Odebrat z oblíbených</button>
             </form>
         </div>
-        <div class="d-flex flex-row movie-detail">
-            <div class="">
-                <img class="" th:src="@{/{path}(path=${movie.imagePath})}" alt="film-plakat" >
+        <div class="page">
+            <div class="d-flex flex-row movie-detail">
+                <div class="">
+                    <img class="" th:src="@{/{path}(path=${movie.imagePath})}" alt="film-plakat" >
+                </div>
+                <div class="ms-4">
+                    <h1 th:text="${movie.name}"></h1>
+                    <p th:text="'Délka: ' + ${movie.length} + ' minut'"></p>
+                    <p>Žánry: <a class="ref" th:href="@{/movie/genre/{id}(id=${genre.id})}" th:each="genre : ${movie.genres}" th:text="${genre.name} +' '"></a></p>
+                    <p>Režisér: <a class="ref" th:href="@{/director/{id}(id=${director.id})}" th:each="director : ${movie.directors}" th:text="${director.name} + ' ' + ${director.surname}"></a></p>
+                    <p>Herci: <a class="ref" th:href="@{/actor/{id}(id=${actor.id})}" th:each="actor : ${movie.actors}" th:text="${actor.name} + ' ' + ${actor.surname} + ' '"></a></p>
+                    <p>Stát: <a th:href="@{/movie/country/{id}(id=${country.id})}" class="ref" th:each="country : ${movie.countries}" th:text="${country.code} + ' '"></a></p>
+                    <p th:text="'Datum uvedení: ' + ${#temporals.format(movie.releaseDate, 'dd. MM. yyyy')}"></p>
+                </div>
+                <div>
+                    <p class="h5">Hodnocení</p>
+                    <div th:if="${rating != null}" class="rating" th:text="${rating}"></div>
+                    <div th:unless="${rating != null}" class="rating" th:text="'?'"></div>
+                </div>
             </div>
-            <div class="ms-4">
-                <h1 th:text="${movie.name}"></h1>
-                <p th:text="'Délka: ' + ${movie.length} + ' minut'"></p>
-                <p>Žánry: <a class="ref" th:href="@{/movie/genre/{id}(id=${genre.id})}" th:each="genre : ${movie.genres}" th:text="${genre.name} +' '"></a></p>
-                <p>Režisér: <a class="ref" th:href="@{/director/{id}(id=${director.id})}" th:each="director : ${movie.directors}" th:text="${director.name} + ' ' + ${director.surname}"></a></p>
-                <p>Herci: <a class="ref" th:href="@{/actor/{id}(id=${actor.id})}" th:each="actor : ${movie.actors}" th:text="${actor.name} + ' ' + ${actor.surname} + ' '"></a></p>
-                <p>Stát: <a th:href="@{/movie/country/{id}(id=${country.id})}" class="ref" th:each="country : ${movie.countries}" th:text="${country.code} + ' '"></a></p>
-                <p th:text="'Datum uvedení: ' + ${#temporals.format(movie.releaseDate, 'dd. MM. yyyy')}"></p>
+            <div class="my-2">
+                <h5>Popis</h5>
+                <p class="content" th:text="${movie.description}"></p>
             </div>
         </div>
-        <div class="my-2">
-            <h5>Popis</h5>
-            <p th:text="${movie.description}"></p>
+        <div>
+            <h2 class="text-center text-light my-3">Recenze</h2>
+            <a sec:authorize="isAuthenticated()" class="btn my-2" th:href="@{/movie/{id}/review(id=${movie.id})}">Přidat recenzi</a>
+            <div th:each="review : ${reviews.content}" class="card">
+                <div class="card-body">
+                    <p class="content" th:text="${review.content}"></p>
+                    <div class="d-flex justify-content-between">
+                        <a class="ref" th:text="${review.user.name} + ' ' + ${review.user.surname}"></a>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 </body>

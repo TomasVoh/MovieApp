@@ -10,7 +10,7 @@
 <body>
 <div th:replace="~{fragments/nav.html :: header}"></div>
 <main class="container my-2">
-    <h3 class="text-center">Přidání nového herce</h3>
+    <h1 class="text-center">Přidání nového herce</h1>
     <form method="POST" th:action="@{/actor/new}" th:object="${actor}" enctype="multipart/form-data">
         <div class="mb-3">
             <label for="name" class="form-label">Jméno herce</label>

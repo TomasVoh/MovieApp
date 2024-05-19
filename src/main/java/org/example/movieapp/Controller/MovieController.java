@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.List;
 
@@ -50,13 +51,20 @@ public class MovieController {
     }
 
     @GetMapping("/{id}")
-    public String findMovieById(@PathVariable int id, Model model, Principal principal) {
+    public String findMovieById(@PathVariable int id, Model model, Principal principal,
+                                @RequestParam(name = "pageNum", required = false, defaultValue = "0") int pageNum,
+                                @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize
+    ) {
         Movie movie = movieService.findById(id);
+        PageDto<Review> reviews = reviewService.findByMovie(pageNum, pageSize, movie);
+        BigDecimal averageRating = reviewService.findAverageRatingByMovie(id);
         if (principal != null) {
             UserEntity userEntity = userEntityService.findUserByEmail(principal.getName());
             model.addAttribute("user", userEntity);
         }
         model.addAttribute("movie", movie);
+        model.addAttribute("rating", averageRating);
+        model.addAttribute("reviews", reviews);
         return "movie-detail";
     }
 
@@ -107,8 +115,9 @@ public class MovieController {
         return "movie-country";
     }
 
-    @GetMapping("/{id}/review")
-    public String saveReviewPage(@PathVariable("id") long id, Model model) {
+    @GetMapping("/{movieId}/review")
+    @PreAuthorize("isAuthenticated()")
+    public String saveReviewPage(@PathVariable("movieId") long id, Model model) {
         Review review = new Review();
         Movie movie = movieService.findById(id);
         model.addAttribute("review", review);
@@ -116,8 +125,9 @@ public class MovieController {
         return "review-new";
     }
 
-    @PostMapping("/{id}/review")
-    public String saveReview(@PathVariable("id") long id, @ModelAttribute("review") Review review, Principal principal) {
+    @PostMapping("/{movieId}/review")
+    @PreAuthorize("isAuthenticated()")
+    public String saveReview(@PathVariable("movieId") long id, @ModelAttribute("review") Review review, Principal principal) {
         UserEntity userEntity = userEntityService.findUserByEmail(principal.getName());
         Movie movie = movieService.findById(id);
         review.setMovie(movie);

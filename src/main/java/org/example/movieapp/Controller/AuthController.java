@@ -5,6 +5,7 @@ import org.example.movieapp.Dto.RegisterDto;
 import org.example.movieapp.Service.UserEntityService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,12 +44,14 @@ public class AuthController {
     }
 
     @PostMapping("/favourite/movie/{id}")
+    @PreAuthorize("hasAnyAuthority('USER')")
     public String addToFavouriteMovie(@PathVariable("id") long id, Principal principal) {
         userEntityService.addToFavouriteMovie(id, principal.getName());
         return String.format("redirect:/movie/%d", id);
     }
 
     @PostMapping("/rmFavourite/movie/{id}")
+    @PreAuthorize("hasAnyAuthority('USER')")
     public String removeFromFavouriteMovie(@PathVariable("id") long id, Principal principal) {
         userEntityService.removeFromFavouriteMovie(id, principal.getName());
         return String.format("redirect:/movie/%d", id);
