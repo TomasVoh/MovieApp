@@ -2,8 +2,10 @@ package org.example.movieapp.Service.Impl;
 
 import org.example.movieapp.Dto.PageDto;
 import org.example.movieapp.Dto.RegisterDto;
+import org.example.movieapp.Model.Actor;
 import org.example.movieapp.Model.Movie;
 import org.example.movieapp.Model.UserEntity;
+import org.example.movieapp.Repository.ActorRepository;
 import org.example.movieapp.Repository.AuthorityRepository;
 import org.example.movieapp.Repository.MovieRepository;
 import org.example.movieapp.Repository.UserEntityRepository;
@@ -21,13 +23,15 @@ import java.util.NoSuchElementException;
 public class UserEntityServiceImpl implements UserEntityService {
     private UserEntityRepository userEntityRepository;
     private AuthorityRepository authorityRepository;
+    private ActorRepository actorRepository;
     private MovieRepository movieRepository;
     private PasswordEncoder passwordEncoder;
     private final Logger logger = LoggerFactory.getLogger(UserEntityServiceImpl.class);
 
-    public UserEntityServiceImpl(UserEntityRepository userEntityRepository, AuthorityRepository authorityRepository, MovieRepository movieRepository, PasswordEncoder passwordEncoder) {
+    public UserEntityServiceImpl(UserEntityRepository userEntityRepository, AuthorityRepository authorityRepository, ActorRepository actorRepository, MovieRepository movieRepository, PasswordEncoder passwordEncoder) {
         this.userEntityRepository = userEntityRepository;
         this.authorityRepository = authorityRepository;
+        this.actorRepository = actorRepository;
         this.movieRepository = movieRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -81,6 +85,22 @@ public class UserEntityServiceImpl implements UserEntityService {
         Movie movie = movieRepository.findById(movieId).orElseThrow(NoSuchElementException::new);
         UserEntity userEntity = findUserByEmail(userEmail);
         userEntity.getMovies().remove(movie);
+        save(userEntity);
+    }
+
+    @Override
+    public void addToFavouriteActor(long actorId, String userEmail) {
+        Actor actor = actorRepository.findById(actorId).orElseThrow(NoSuchElementException::new);
+        UserEntity userEntity = findUserByEmail(userEmail);
+        userEntity.getActors().add(actor);
+        save(userEntity);
+    }
+
+    @Override
+    public void removeFromFavouriteActor(long actorId, String userEmail) {
+        Actor actor = actorRepository.findById(actorId).orElseThrow(NoSuchElementException::new);
+        UserEntity userEntity = findUserByEmail(userEmail);
+        userEntity.getActors().remove(actor);
         save(userEntity);
     }
 }

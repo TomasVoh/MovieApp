@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.userdetails.User;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -34,4 +35,6 @@ public class Actor {
             inverseJoinColumns = @JoinColumn(name = "country_id", referencedColumnName = "id")
     )
     private List<Country> countries;
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "actors")
+    private List<UserEntity> users;
 }

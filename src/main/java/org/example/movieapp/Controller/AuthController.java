@@ -56,4 +56,18 @@ public class AuthController {
         userEntityService.removeFromFavouriteMovie(id, principal.getName());
         return String.format("redirect:/movie/%d", id);
     }
+
+    @PostMapping("/favourite/actor/{id}")
+    @PreAuthorize("hasAnyAuthority('USER')")
+    public String addToFavouriteActor(@PathVariable("id") long id, Principal principal) {
+        userEntityService.addToFavouriteActor(id, principal.getName());
+        return String.format("redirect:/actor/%d", id);
+    }
+
+    @PostMapping("/rmFavourite/actor/{id}")
+    @PreAuthorize("hasAnyAuthority('USER')")
+    public String removeFromFavouriteActor(@PathVariable("id") long id, Principal principal) {
+        userEntityService.removeFromFavouriteActor(id, principal.getName());
+        return String.format("redirect:/actor/%d", id);
+    }
 }

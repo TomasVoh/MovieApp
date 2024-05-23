@@ -1,5 +1,6 @@
 package org.example.movieapp.Controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.example.movieapp.Dto.PageDto;
 import org.example.movieapp.Model.*;
 import org.example.movieapp.Service.*;
@@ -25,17 +26,19 @@ public class MovieController {
     private UserEntityService userEntityService;
     private DirectorService directorService;
     private ActorService actorService;
+    private MovieImportExportService movieImportExportService;
     private CountryService countryService;
     private ImageService imageService;
     private Logger logger = LoggerFactory.getLogger(MovieController.class);
 
-    public MovieController(MovieService movieService, GenreService genreService, ReviewService reviewService, UserEntityService userEntityService, DirectorService directorService, ActorService actorService, CountryService countryService, ImageService imageService) {
+    public MovieController(MovieService movieService, GenreService genreService, ReviewService reviewService, UserEntityService userEntityService, DirectorService directorService, ActorService actorService, MovieImportExportService movieImportExportService, CountryService countryService, ImageService imageService) {
         this.movieService = movieService;
         this.genreService = genreService;
         this.reviewService = reviewService;
         this.userEntityService = userEntityService;
         this.directorService = directorService;
         this.actorService = actorService;
+        this.movieImportExportService = movieImportExportService;
         this.countryService = countryService;
         this.imageService = imageService;
     }
@@ -134,5 +137,11 @@ public class MovieController {
         review.setUser(userEntity);
         reviewService.save(review);
         return String.format("redirect:/movie/%d", id);
+    }
+
+    @GetMapping("/export/excel")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public void exportMoviesToExcel(HttpServletResponse res) {
+        movieImportExportService.exportToExcel(res);
     }
 }

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
+    <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script type="text/javascript" defer th:src="@{/script/recommend.js}"></script>
+    <title>Doporučení</title>
+</head>
+<body>
+    <div th:replace="~{fragments/nav.html :: header}"></div>
+    <main class="container my-3">
+        <div>
+            <p class="text-light" th:each="movie : ${movies}" th:text="${movie.name}"></p>
+        </div>
+        <div class="text-center">
+            <button class="btn">Vytvořit doporučení</button>
+        </div>
+    </main>
+</body>
+</html>

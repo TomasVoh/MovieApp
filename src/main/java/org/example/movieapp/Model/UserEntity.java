@@ -47,6 +47,13 @@ public class UserEntity {
             inverseJoinColumns = @JoinColumn(name = "movie_id", referencedColumnName = "id")
     )
     private List<Movie> movies;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "users_favourite_actors",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "actor_id", referencedColumnName = "id")
+    )
+    private List<Actor> actors;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Review> reviews;
 

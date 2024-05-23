@@ -3,25 +3,30 @@ package org.example.movieapp.Controller;
 import org.example.movieapp.Dto.PageDto;
 import org.example.movieapp.Model.Actor;
 import org.example.movieapp.Model.Country;
+import org.example.movieapp.Model.UserEntity;
 import org.example.movieapp.Service.ActorService;
 import org.example.movieapp.Service.CountryService;
 import org.example.movieapp.Service.ImageService;
+import org.example.movieapp.Service.UserEntityService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
 @RequestMapping("/actor")
 public class ActorController {
     private ActorService actorService;
+    private UserEntityService userEntityService;
     private CountryService countryService;
     private ImageService imageService;
 
-    public ActorController(ActorService actorService, CountryService countryService, ImageService imageService) {
+    public ActorController(ActorService actorService, UserEntityService userEntityService, CountryService countryService, ImageService imageService) {
         this.actorService = actorService;
+        this.userEntityService = userEntityService;
         this.countryService = countryService;
         this.imageService = imageService;
     }
@@ -36,8 +41,10 @@ public class ActorController {
     }
 
     @GetMapping("/{id}")
-    public String findActorById(@PathVariable("id") int id, Model model) {
+    public String findActorById(@PathVariable("id") int id, Model model, Principal principal) {
         Actor actor = actorService.findById(id);
+        UserEntity user = userEntityService.findUserByEmail(principal.getName());
+        model.addAttribute("user", user);
         model.addAttribute("actor", actor);
         return "actor-detail";
     }

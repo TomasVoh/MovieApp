@@ -9,4 +9,6 @@ public interface UserEntityService extends PageReadAndWriteService<UserEntity>{
     UserEntity findUserByEmail(String email);
     void addToFavouriteMovie(long movieId, String userEmail);
     void removeFromFavouriteMovie(long movieId, String userEmail);
+    void addToFavouriteActor(long actorId, String userEmail);
+    void removeFromFavouriteActor(long actorId, String userEmail);
 }
