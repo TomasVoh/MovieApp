@@ -37,4 +37,9 @@ public class Actor {
     private List<Country> countries;
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "actors")
     private List<UserEntity> users;
+
+    @Override
+    public String toString() {
+        return String.valueOf(id);
+    }
 }

@@ -1,5 +1,8 @@
 package org.example.movieapp.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,35 +25,40 @@ public class Movie {
     private String name;
     @Column(nullable = false, columnDefinition = "MEDIUMTEXT")
     private String description;
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     private LocalDate releaseDate;
     @Column(nullable = false)
     private int length;
     @Column(nullable = false)
     private String imagePath;
-    @ManyToMany(fetch = FetchType.EAGER)
+    @JsonBackReference
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "movie_genres",
             joinColumns = @JoinColumn(name = "movie_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "id")
     )
     private List<Genre> genres;
-    @ManyToMany(fetch = FetchType.EAGER)
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "actors_movies",
             joinColumns = @JoinColumn(name = "movie_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "actor_id", referencedColumnName = "id")
     )
     private List<Actor> actors;
-    @ManyToMany(fetch = FetchType.EAGER)
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "movies_country",
             joinColumns = @JoinColumn(name = "movie_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "country_id", referencedColumnName = "id")
     )
     private List<Country> countries;
+    @JsonIgnore
     @ManyToMany(mappedBy = "movies", fetch = FetchType.LAZY)
     private List<UserEntity> users;
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "directors_movies",
@@ -58,6 +66,7 @@ public class Movie {
             inverseJoinColumns = @JoinColumn(name = "director_id", referencedColumnName = "id")
     )
     private List<Director> directors;
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "movie")
     private List<Review> reviews;
 }

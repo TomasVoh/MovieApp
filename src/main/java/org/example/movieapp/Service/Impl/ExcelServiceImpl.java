@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
 
 @Service
 public class ExcelServiceImpl implements ExcelService {
@@ -56,6 +57,8 @@ public class ExcelServiceImpl implements ExcelService {
             cell.setCellValue((Boolean) value);
         } else if (value instanceof Long) {
             cell.setCellValue((Long) value);
+        } else if (value instanceof LocalDate) {
+            cell.setCellValue((LocalDate) value);
         }
         cell.setCellStyle(style);
     }
@@ -79,11 +82,5 @@ public class ExcelServiceImpl implements ExcelService {
     public Workbook getWorkBook() {
         return workbook;
     }
-
-    @Override
-    public Sheet getSheet() {
-        return sheet;
-    }
-
 
 }

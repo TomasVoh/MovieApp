@@ -11,8 +11,8 @@
 <body>
     <div th:replace="~{fragments/nav.html :: header}"></div>
     <main class="container my-2">
-        <h1 class="text-center">Přidání nového filmu</h1>
-        <form method="POST" th:action="@{/movie/new}" th:object="${movie}" enctype="multipart/form-data">
+        <h1 class="text-center">Editovat film</h1>
+        <form method="POST" th:object="${movie}" th:action="@{/movie/edit/{id}(id=${movie.id})}">
             <div class="mb-3">
                 <label for="name" class="form-label">Název filmu</label>
                 <input th:field="*{name}" type="text" class="form-control" id="name">
@@ -22,16 +22,11 @@
                 <textarea th:field="*{description}" class="form-control" id="description" aria-describedby="emailHelp" cols="10" rows="5"></textarea>
             </div>
             <div class="mb-3">
-                <label for="date" class="form-label">Datum</label>
-                <input th:field="*{releaseDate}" class="form-control" id="date" aria-describedby="emailHelp" type="date">
-            </div>
-            <div class="mb-3">
                 <label for="length" class="form-label">Délka (v minutách)</label>
                 <input th:field="*{length}" type="number" class="form-control" id="length">
             </div>
             <div class="mb-3">
-                <label for="image" class="form-label">Obrázek</label>
-                <input type="file" name="image" class="form-control" id="image">
+                <input type="text" style="display: none" th:field="*{imagePath}" name="image" class="form-control" id="image">
             </div>
             <div class="mb-3">
                 <label for="genres" class="form-label">Žánry</label>
@@ -63,7 +58,7 @@
                 </select>
             </div>
             <div class="text-center">
-                <button class="btn btn-lg">Přidat film</button>
+                <button class="btn">Editovat</button>
             </div>
         </form>
     </main>

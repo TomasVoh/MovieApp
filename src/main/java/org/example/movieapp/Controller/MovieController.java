@@ -3,23 +3,26 @@ package org.example.movieapp.Controller;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.movieapp.Dto.PageDto;
 import org.example.movieapp.Model.*;
+import org.example.movieapp.Repository.MovieRepository;
 import org.example.movieapp.Service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
 @RequestMapping("/movie")
 public class MovieController {
+    private final MovieRepository movieRepository;
     private MovieService movieService;
     private GenreService genreService;
     private ReviewService reviewService;
@@ -31,7 +34,7 @@ public class MovieController {
     private ImageService imageService;
     private Logger logger = LoggerFactory.getLogger(MovieController.class);
 
-    public MovieController(MovieService movieService, GenreService genreService, ReviewService reviewService, UserEntityService userEntityService, DirectorService directorService, ActorService actorService, MovieImportExportService movieImportExportService, CountryService countryService, ImageService imageService) {
+    public MovieController(MovieService movieService, GenreService genreService, ReviewService reviewService, UserEntityService userEntityService, DirectorService directorService, ActorService actorService, MovieImportExportService movieImportExportService, CountryService countryService, ImageService imageService, MovieRepository movieRepository) {
         this.movieService = movieService;
         this.genreService = genreService;
         this.reviewService = reviewService;
@@ -41,7 +44,9 @@ public class MovieController {
         this.movieImportExportService = movieImportExportService;
         this.countryService = countryService;
         this.imageService = imageService;
+        this.movieRepository = movieRepository;
     }
+
 
     @GetMapping
     public String findAllMovies(@RequestParam(required = false, defaultValue = "0", name = "pageNum") int pageNum,
@@ -96,6 +101,29 @@ public class MovieController {
         return "redirect:/movie";
     }
 
+    @GetMapping("/edit/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public String updateMoviePage(Model model, @PathVariable("id") long id) {
+        Movie movie = movieService.findById(id);
+        List<Actor> actors = actorService.findAll();
+        List<Genre> genreList = genreService.findAll();
+        List<Country> countries = countryService.findAll();
+        List<Director> directors = directorService.findAll();
+        model.addAttribute("movie", movie);
+        model.addAttribute("directors", directors);
+        model.addAttribute("countries", countries);
+        model.addAttribute("actors", actors);
+        model.addAttribute("genreList", genreList);
+        return "movie-edit";
+    }
+
+    @PostMapping("/edit/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public String updateMovie(@PathVariable("id") long id, @ModelAttribute("movie") Movie movie) {
+        movieRepository.save(movie);
+        return String.format("redirect:/movie/%d", id);
+    }
+
     @GetMapping("/genre/{id}")
     public String findMoviesByGenre(@RequestParam(required = false, defaultValue = "0", name = "pageNum") int pageNum,
                                     @RequestParam(required = false, defaultValue = "25", name = "pageSize") int pageSize,
@@ -143,5 +171,13 @@ public class MovieController {
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     public void exportMoviesToExcel(HttpServletResponse res) {
         movieImportExportService.exportToExcel(res);
+    }
+
+    @PostMapping("/import/excel")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public String importFromExcel(@RequestParam("file") MultipartFile file) {
+        System.out.println("ahoj");
+        movieImportExportService.importFromExcel(file);
+        return "redirect:/movie";
     }
 }

@@ -2,6 +2,8 @@ package org.example.movieapp.Controller;
 
 import org.example.movieapp.Model.Movie;
 import org.example.movieapp.Service.RecommendService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,10 +23,17 @@ public class RecommendController {
     }
 
     @GetMapping("")
+    @PreAuthorize("isAuthenticated()")
     public String recommendPage(Model model, Principal principal) {
-        List<Movie> movies = recommendService.findRecommendedMovies(principal.getName());
-        model.addAttribute("movies", movies);
         return "recommend";
+    }
+
+    @GetMapping("/new")
+    @ResponseBody
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<Movie>> recommend(Principal principal) {
+        List<Movie> movies = recommendService.findRecommendedMovies(principal.getName());
+        return ResponseEntity.ok(movies);
     }
 
 }

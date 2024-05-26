@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
-    <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <script defer type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <script defer type="text/javascript" th:src="@{/script/upload.js}"></script>
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <title>Filmy</title>
@@ -11,8 +12,18 @@
 <body>
     <div th:replace="~{fragments/nav.html :: header}"></div>
     <main class="container my-2">
-        <a href="/movie/new" sec:authorize="hasAnyAuthority('ADMIN')" class="btn my-1">Přidat nový film</a>
-        <a sec:authorize="hasAnyAuthority('ADMIN')" th:href="@{/movie/export/excel}" class="btn"><span class="material-symbols-outlined">ios_share</span></a>
+        <div sec:authorize="hasAnyAuthority('ADMIN')" class="control-panel my-2">
+            <div>
+                <a href="/movie/new" class="btn">Přidat nový film</a>
+            </div>
+            <div>
+                <a th:href="@{/movie/export/excel}" class="btn"><span class="material-symbols-outlined">download</span></a>
+            </div>
+            <form id="uploadForm" enctype="multipart/form-data" th:action="@{/movie/import/excel}" method="POST">
+                <label class="btn" for="upload"><span class="material-symbols-outlined">upload</span></label>
+                <input style="display: none" type="file" name="file" id="upload">
+            </form>
+        </div>
         <div>
             <div class="content-block row row-cols-3">
                 <div th:each="movie : ${movies.content}" class="card p-0 mx-2 mb-3 overflow-hidden" style="width: 18rem;">

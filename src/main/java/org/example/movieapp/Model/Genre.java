@@ -1,9 +1,12 @@
 package org.example.movieapp.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -18,6 +21,12 @@ public class Genre {
     private Long id;
     @Column(nullable = false, unique = true, length = 100)
     private String name;
-    @ManyToMany(mappedBy = "genres", fetch = FetchType.LAZY)
+    @JsonBackReference
+    @ManyToMany(mappedBy = "genres", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Movie> movies;
+
+    @Override
+    public String toString() {
+        return String.valueOf(id);
+    }
 }

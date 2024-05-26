@@ -13,5 +13,4 @@ public interface ExcelService {
     void createCell(Row row, int columnCount, Object value, XSSFCellStyle cellStyle);
     void initResponse(HttpServletResponse resp, String fileName);
     Workbook getWorkBook();
-    Sheet getSheet();
 }

@@ -27,6 +27,10 @@ public class SecurityConfig {
                 .logout((out) -> {
                     out.logoutUrl("/logout")
                             .logoutSuccessUrl("/movie");
+                })
+                .rememberMe((rememberMe) -> {
+                    rememberMe.key("uniqueKey")
+                            .rememberMeParameter("rememberMe");
                 });
         return http.build();
     }

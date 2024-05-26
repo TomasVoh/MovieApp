@@ -9,14 +9,15 @@
 </head>
 <body>
     <div th:replace="~{fragments/nav.html :: header}"></div>
-    <main class="container my-2 ">
-        <div sec:authorize="isAuthenticated()">
-            <form th:if="${!user.getMovies().contains(movie)}" th:action="@{/favourite/movie/{id}(id=${movie.id})}" method="POST">
-                <button type="submit" class="btn mb-3" >Přidat do oblíbených</button>
+    <main class="container my-2">
+        <div class="mb-3 d-flex flex-row">
+            <form sec:authorize="isAuthenticated()" th:if="${!user.getMovies().contains(movie)}" th:action="@{/favourite/movie/{id}(id=${movie.id})}" method="POST">
+                <button type="submit" class="btn me-2" >Přidat do oblíbených</button>
             </form>
-            <form method="POST" th:unless="${!user.getMovies().contains(movie)}" th:action="@{/rmFavourite/movie/{id}(id=${movie.id})}">
-                <button type="submit" class="btn mb-3" >Odebrat z oblíbených</button>
+            <form sec:authorize="isAuthenticated()" method="POST" th:unless="${!user.getMovies().contains(movie)}" th:action="@{/rmFavourite/movie/{id}(id=${movie.id})}">
+                <button type="submit" class="btn me-2" >Odebrat z oblíbených</button>
             </form>
+            <a class="btn" th:href="@{/movie/edit/{id}(id=${movie.id})}">Editovat film</a>
         </div>
         <div class="page">
             <div class="d-flex flex-row movie-detail">
@@ -46,7 +47,7 @@
         <div>
             <h2 class="text-center text-light my-3">Recenze</h2>
             <a sec:authorize="isAuthenticated()" class="btn my-2" th:href="@{/movie/{id}/review(id=${movie.id})}">Přidat recenzi</a>
-            <div th:each="review : ${reviews.content}" class="card">
+            <div th:each="review : ${reviews.content}" class="card mb-2">
                 <div class="card-body">
                     <p class="content" th:text="${review.content}"></p>
                     <div class="d-flex justify-content-between">
