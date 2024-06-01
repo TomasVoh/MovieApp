@@ -7,6 +7,9 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
+import org.hibernate.envers.RelationTargetAuditMode;
 import org.springframework.security.core.userdetails.User;
 
 import java.time.LocalDate;
@@ -16,6 +19,7 @@ import java.util.List;
 @Table(name = "movies")
 @Data
 @AllArgsConstructor
+@Audited
 @NoArgsConstructor
 public class Movie {
     @Id
@@ -32,6 +36,7 @@ public class Movie {
     @Column(nullable = false)
     private String imagePath;
     @JsonBackReference
+    @NotAudited
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "movie_genres",
@@ -40,6 +45,7 @@ public class Movie {
     )
     private List<Genre> genres;
     @JsonIgnore
+    @NotAudited
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "actors_movies",
@@ -48,6 +54,7 @@ public class Movie {
     )
     private List<Actor> actors;
     @JsonIgnore
+    @NotAudited
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "movies_country",
@@ -56,9 +63,11 @@ public class Movie {
     )
     private List<Country> countries;
     @JsonIgnore
+    @NotAudited
     @ManyToMany(mappedBy = "movies", fetch = FetchType.LAZY)
     private List<UserEntity> users;
     @JsonIgnore
+    @NotAudited
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "directors_movies",
@@ -67,6 +76,7 @@ public class Movie {
     )
     private List<Director> directors;
     @JsonIgnore
+    @NotAudited
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "movie")
     private List<Review> reviews;
 }

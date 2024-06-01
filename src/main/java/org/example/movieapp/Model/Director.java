@@ -34,6 +34,8 @@ public class Director {
     private List<Country> countries;
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "directors")
     private List<Movie> movies;
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "directors")
+    private List<UserEntity> users;
 
     @Override
     public String toString() {

@@ -4,26 +4,31 @@ import org.example.movieapp.Dto.PageDto;
 import org.example.movieapp.Model.Director;
 import org.example.movieapp.Model.Country;
 import org.example.movieapp.Model.Director;
+import org.example.movieapp.Model.UserEntity;
 import org.example.movieapp.Service.CountryService;
 import org.example.movieapp.Service.DirectorService;
 import org.example.movieapp.Service.ImageService;
+import org.example.movieapp.Service.UserEntityService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
 @RequestMapping("/director")
 public class DirectorController {
     private DirectorService directorService;
+    private UserEntityService userEntityService;
     private ImageService imageService;
     private CountryService countryService;
 
-    public DirectorController(DirectorService directorService, ImageService imageService, CountryService countryService) {
+    public DirectorController(DirectorService directorService, UserEntityService userEntityService, ImageService imageService, CountryService countryService) {
         this.directorService = directorService;
+        this.userEntityService = userEntityService;
         this.imageService = imageService;
         this.countryService = countryService;
     }
@@ -38,8 +43,12 @@ public class DirectorController {
     }
 
     @GetMapping("/{id}")
-    public String findDirectorById(@PathVariable int id, Model model) {
+    public String findDirectorById(@PathVariable int id, Model model, Principal principal) {
         Director director = directorService.findById(id);
+        if(principal != null) {
+            UserEntity userEntity = userEntityService.findUserByEmail(principal.getName());
+            model.addAttribute("user", userEntity);
+        }
         model.addAttribute("director", director);
         return "director-detail";
     }

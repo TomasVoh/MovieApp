@@ -1,6 +1,5 @@
 package org.example.movieapp.Controller;
 
-import lombok.extern.java.Log;
 import org.example.movieapp.Dto.RegisterDto;
 import org.example.movieapp.Service.UserEntityService;
 import org.slf4j.Logger;
@@ -69,5 +68,17 @@ public class AuthController {
     public String removeFromFavouriteActor(@PathVariable("id") long id, Principal principal) {
         userEntityService.removeFromFavouriteActor(id, principal.getName());
         return String.format("redirect:/actor/%d", id);
+    }
+
+    @PostMapping("/favourite/director/{id}")
+    public String addToFavouriteDirector(@PathVariable("id") long id, Principal principal) {
+        userEntityService.addToFavouriteDirector(id, principal.getName());
+        return String.format("redirect:/director/%d", id);
+    }
+
+    @PostMapping("/rmFavourite/director/{id}")
+    public String removeFromFavouriteDirector(@PathVariable("id") long id, Principal principal) {
+        userEntityService.removeFromFavouriteDirector(id, principal.getName());
+        return String.format("redirect:/director/%d", id);
     }
 }

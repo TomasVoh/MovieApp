@@ -1,9 +1,22 @@
 const btn = document.getElementById("recommendBtn");
-const main = document.querySelector("main");
+const recommend = document.querySelector(".recommend");
 btn.addEventListener('click', () => {
     fetch("http://localhost:8080/recommend/new").then((res) => {
         return res.json();
     }).then((list) => {
-        console.log(list[0]);
+        list.forEach((movie) => {
+            appendMovie(movie);
+        })
     })
 })
+
+function appendMovie(movie) {
+    let div = document.createElement("div");
+    let movieRef = document.createElement("a");
+    div.classList.add("text-center", "my-2")
+    movieRef.classList.add("ref");
+    movieRef.setAttribute("href", "movie/" + movie.id);
+    movieRef.textContent = movie.name;
+    div.append(movieRef);
+    recommend.append(div);
+}

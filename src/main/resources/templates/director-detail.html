@@ -9,7 +9,15 @@
 </head>
 <body>
 <div th:replace="~{fragments/nav.html :: header}"></div>
-<main class="container">
+<main class="container my-2">
+    <div class="mb-3 d-flex flex-row">
+        <form sec:authorize="isAuthenticated()" th:if="${!user.getDirectors().contains(director)}" th:action="@{/favourite/director/{id}(id=${director.id})}" method="POST">
+            <button type="submit" class="btn me-2" >Přidat do oblíbených</button>
+        </form>
+        <form sec:authorize="isAuthenticated()" method="POST" th:unless="${!user.getDirectors().contains(director)}" th:action="@{/rmFavourite/director/{id}(id=${director.id})}">
+            <button type="submit" class="btn me-2" >Odebrat z oblíbených</button>
+        </form>
+    </div>
     <div class="card my-3">
         <div class="row g-0">
             <div class="col-md-4">

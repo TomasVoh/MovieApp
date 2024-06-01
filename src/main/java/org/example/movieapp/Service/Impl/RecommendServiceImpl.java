@@ -50,8 +50,9 @@ public class RecommendServiceImpl implements RecommendService {
     @Override
     public List<Map.Entry<Movie, Double>> filterMovies(HashMap<Movie, Double> moviePriorities) {
         List<Map.Entry<Movie, Double>> movies = new ArrayList<>(moviePriorities.entrySet());
-        System.out.println(movies.getFirst().getKey().getName());
-        return movies.stream().filter((entry) -> entry.getValue() != 0).toList();
+        movies.sort((firstEntry, secondEntry) -> secondEntry.getValue().compareTo(firstEntry.getValue()));
+        System.out.println(movies.stream().map((movie) -> movie.getKey().getName() + " " + movie.getValue()).toList());
+        return movies.subList(0, 5);
     }
 
 
