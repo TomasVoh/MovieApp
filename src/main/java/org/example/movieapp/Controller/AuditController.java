@@ -1,7 +1,10 @@
 package org.example.movieapp.Controller;
 
+import org.example.movieapp.Dto.RevisionDto;
 import org.example.movieapp.Model.CustomRevisionEntity;
 import org.example.movieapp.Service.AuditService;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.prepost.PreFilter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,8 +23,9 @@ public class AuditController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public String findAudits(Model model) {
-        List<CustomRevisionEntity> revisionEntityList = auditService.findAll();
+        List<RevisionDto> revisionEntityList = auditService.findAll();
         model.addAttribute("revisionEntityList", revisionEntityList);
         return "audit";
     }

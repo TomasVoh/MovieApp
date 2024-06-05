@@ -31,6 +31,9 @@
                     <li sec:authorize="!isAuthenticated()" class="nav-item">
                         <a class="text-light nav-link" href="/register">Registrovat se</a>
                     </li>
+                    <li sec:authorize="hasAnyAuthority('ADMIN')" class="nav-item">
+                        <a class="text-light nav-link" href="/audit">Auditing</a>
+                    </li>
                     <li sec:authorize="isAuthenticated()" class="nav-item">
                         <a class="text-light nav-link" href="/logout">Odhlásit se</a>
                     </li>

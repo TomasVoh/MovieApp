@@ -155,3 +155,8 @@ main .btn:hover {
     display: flex;
     justify-content: center;
 }
+
+.table>:not(caption)>*>* {
+    background: #1d191d;
+    color: white;
+}

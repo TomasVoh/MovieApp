@@ -8,6 +8,26 @@
     <title>Audit</title>
 </head>
 <body>
-    <div th:each="revision : ${revisionEntityList}" th:text="${revision.revisionDate}"></div>
+    <div th:replace="~{fragments/nav.html :: header}"></div>
+    <main class="container my-2">
+        <table id="audit-table" class="table">
+            <thead>
+            <tr>
+                <th scope="col">Id entity</th>
+                <th scope="col">Datum změny</th>
+                <th scope="col">Typ změny</th>
+                <th scope="col">Uživatel</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="revision : ${revisionEntityList}">
+                <td th:text="${revision.entityId}"></td>
+                <td th:text="${#temporals.format(revision.getTimestamp(), 'dd.MM.yyyy HH:mm:ss')}"></td>
+                <td th:text="${revision.revType.getRepresentation() == 1 ? 'EDITACE' : (revision.getRevType().getRepresentation() == 2 ? 'SMAZÁNÍ' : 'PŘIDÁNÍ')}"></td>
+                <td th:text="${revision.username}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </main>
 </body>
 </html>
