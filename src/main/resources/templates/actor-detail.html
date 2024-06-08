@@ -10,13 +10,18 @@
 <body>
     <div th:replace="~{fragments/nav.html :: header}"></div>
     <main class="container my-2">
-        <div sec:authorize="isAuthenticated()">
-            <form th:if="${!user.getActors().contains(actor)}" th:action="@{/favourite/actor/{id}(id=${actor.id})}" method="POST">
-                <button type="submit" class="btn mb-1" >Přidat do oblíbených</button>
-            </form>
-            <form method="POST" th:unless="${!user.getActors().contains(actor)}" th:action="@{/rmFavourite/actor/{id}(id=${actor.id})}">
-                <button type="submit" class="btn mb-1" >Odebrat z oblíbených</button>
-            </form>
+        <div class="d-flex flex-row">
+            <div sec:authorize="isAuthenticated()">
+                <form th:if="${!user.getActors().contains(actor)}" th:action="@{/favourite/actor/{id}(id=${actor.id})}" method="POST">
+                    <button type="submit" class="btn mb-1" >Přidat do oblíbených</button>
+                </form>
+                <form method="POST" th:unless="${!user.getActors().contains(actor)}" th:action="@{/rmFavourite/actor/{id}(id=${actor.id})}">
+                    <button type="submit" class="btn mb-1" >Odebrat z oblíbených</button>
+                </form>
+            </div>
+            <div class="ms-2" sec:authorize="hasAnyAuthority('ADMIN', 'EDITOR')">
+                <a th:href="@{/actor/edit/{id}(id=${actor.id})}" class="btn">Editovat herce</a>
+            </div>
         </div>
         <div class="card my-3">
             <div class="row g-0">

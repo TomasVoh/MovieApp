@@ -15,6 +15,8 @@ import org.springframework.security.core.userdetails.User;
 import java.time.LocalDate;
 import java.util.List;
 
+import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
+
 @Entity
 @Table(name = "movies")
 @Data
@@ -44,8 +46,7 @@ public class Movie {
             inverseJoinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "id")
     )
     private List<Genre> genres;
-    @JsonIgnore
-    @NotAudited
+    @JsonManagedReference
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "actors_movies",
@@ -53,7 +54,6 @@ public class Movie {
             inverseJoinColumns = @JoinColumn(name = "actor_id", referencedColumnName = "id")
     )
     private List<Actor> actors;
-    @JsonIgnore
     @NotAudited
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
@@ -62,11 +62,9 @@ public class Movie {
             inverseJoinColumns = @JoinColumn(name = "country_id", referencedColumnName = "id")
     )
     private List<Country> countries;
-    @JsonIgnore
     @NotAudited
     @ManyToMany(mappedBy = "movies", fetch = FetchType.LAZY)
     private List<UserEntity> users;
-    @JsonIgnore
     @NotAudited
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -75,7 +73,6 @@ public class Movie {
             inverseJoinColumns = @JoinColumn(name = "director_id", referencedColumnName = "id")
     )
     private List<Director> directors;
-    @JsonIgnore
     @NotAudited
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "movie")
     private List<Review> reviews;

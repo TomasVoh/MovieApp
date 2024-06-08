@@ -65,4 +65,19 @@ public class ActorController {
         actorService.save(actor);
         return "redirect:/actor";
     }
+
+    @GetMapping("/edit/{id}")
+    public String editActorPage(@PathVariable("id") long id, Model model) {
+        Actor actor = actorService.findById(id);
+        List<Country> countryList = countryService.findAll();
+        model.addAttribute("actor", actor);
+        model.addAttribute("countryList", countryList);
+        return "actor-edit";
+    }
+
+    @PostMapping("/edit/{id}")
+    public String editActor(@PathVariable("id") long id, @ModelAttribute("actor") Actor actor) {
+        actorService.save(actor);
+        return String.format("redirect:/actor/%d", id);
+    }
 }

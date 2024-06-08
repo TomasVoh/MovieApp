@@ -10,10 +10,12 @@
 <body>
     <div th:replace="~{fragments/nav.html :: header}"></div>
     <main class="container my-2">
+        <h3 class="my-2 text-light">Auditing filmu</h3>
         <table id="audit-table" class="table">
-            <thead>
+            <thead th:fragment="thead">
             <tr>
                 <th scope="col">Id entity</th>
+                <th scope="col">Název entity</th>
                 <th scope="col">Datum změny</th>
                 <th scope="col">Typ změny</th>
                 <th scope="col">Uživatel</th>
@@ -21,9 +23,10 @@
             </thead>
             <tbody>
             <tr th:each="revision : ${revisionEntityList}">
-                <td th:text="${revision.entityId}"></td>
+                <td th:text="${revision.entity.id}"></td>
+                <td><a class="ref" th:href="@{/movie/{id}(id=${revision.entity.id})}" th:text="${revision.entity.name}"></a></td>
                 <td th:text="${#temporals.format(revision.getTimestamp(), 'dd.MM.yyyy HH:mm:ss')}"></td>
-                <td th:text="${revision.revType.getRepresentation() == 1 ? 'EDITACE' : (revision.getRevType().getRepresentation() == 2 ? 'SMAZÁNÍ' : 'PŘIDÁNÍ')}"></td>
+                <td th:text="${revision.revType.getRepresentation() == 1 ? 'EDITACE' : (revision.getRevType().getRepresentation() == 2 ? 'SMAZÁNÍ' : 'PŘIDANÍ')}"></td>
                 <td th:text="${revision.username}"></td>
             </tr>
             </tbody>

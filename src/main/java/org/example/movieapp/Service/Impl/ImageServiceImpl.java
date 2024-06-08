@@ -25,7 +25,6 @@ public class ImageServiceImpl implements ImageService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        System.out.println(newPath.toString());
         return "img/" + filePath;
     }
 }

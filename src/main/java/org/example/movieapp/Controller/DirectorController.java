@@ -54,7 +54,7 @@ public class DirectorController {
     }
 
     @GetMapping("/new")
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'EDITOR')")
     public String saveDirectorPage(Model model) {
         Director director = new Director();
         List<Country> countries = countryService.findAll();
@@ -64,7 +64,7 @@ public class DirectorController {
     }
 
     @PostMapping("/new")
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'EDITOR')")
     public String saveDirector(@ModelAttribute("actor") Director director, @RequestParam("image") MultipartFile file) {
         String path = imageService.saveImage(file);
         director.setImagePath(path);

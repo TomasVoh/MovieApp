@@ -77,7 +77,7 @@ public class MovieController {
     }
 
     @GetMapping("/new")
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'EDITOR')")
     public String saveNewMoviePage(Model model) {
         Movie movie = new Movie();
         List<Actor> actors = actorService.findAll();
@@ -93,7 +93,7 @@ public class MovieController {
     }
 
     @PostMapping("/new")
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'EDITOR')")
     public String saveMovie(@ModelAttribute("movie") Movie movie, @RequestParam("image") MultipartFile image) {
         String filePath = imageService.saveImage(image);
         movie.setImagePath(filePath);
@@ -102,7 +102,7 @@ public class MovieController {
     }
 
     @GetMapping("/edit/{id}")
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'EDITOR')")
     public String updateMoviePage(Model model, @PathVariable("id") long id) {
         Movie movie = movieService.findById(id);
         List<Actor> actors = actorService.findAll();
@@ -118,7 +118,7 @@ public class MovieController {
     }
 
     @PostMapping("/edit/{id}")
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'EDITOR')")
     public String updateMovie(@PathVariable("id") long id, @ModelAttribute("movie") Movie movie) {
         movieRepository.save(movie);
         return String.format("redirect:/movie/%d", id);
@@ -168,7 +168,7 @@ public class MovieController {
     }
 
     @GetMapping("/export/excel")
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'EDITOR')")
     public void exportMoviesToExcel(HttpServletResponse res) {
         movieImportExportService.exportToExcel(res);
     }
@@ -176,7 +176,6 @@ public class MovieController {
     @PostMapping("/import/excel")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     public String importFromExcel(@RequestParam("file") MultipartFile file) {
-        System.out.println("ahoj");
         movieImportExportService.importFromExcel(file);
         return "redirect:/movie";
     }

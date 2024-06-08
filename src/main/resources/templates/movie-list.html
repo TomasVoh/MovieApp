@@ -12,7 +12,7 @@
 <body>
     <div th:replace="~{fragments/nav.html :: header}"></div>
     <main class="container my-2">
-        <div sec:authorize="hasAnyAuthority('ADMIN')" class="control-panel my-2">
+        <div sec:authorize="hasAnyAuthority('ADMIN', 'EDITOR')" class="control-panel my-2">
             <div>
                 <a href="/movie/new" class="btn">Přidat nový film</a>
             </div>

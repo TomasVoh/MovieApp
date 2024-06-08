@@ -1,10 +1,10 @@
 package org.example.movieapp.Controller;
 
 import org.example.movieapp.Dto.RevisionDto;
-import org.example.movieapp.Model.CustomRevisionEntity;
+import org.example.movieapp.Model.Actor;
+import org.example.movieapp.Model.Movie;
 import org.example.movieapp.Service.AuditService;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.access.prepost.PreFilter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,11 +22,19 @@ public class AuditController {
         this.auditService = auditService;
     }
 
-    @GetMapping
+    @GetMapping("/movie")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    public String findAudits(Model model) {
-        List<RevisionDto> revisionEntityList = auditService.findAll();
+    public String findMovieAudits(Model model) {
+        List<RevisionDto<Movie>> revisionEntityList = auditService.findMoviesAudit();
         model.addAttribute("revisionEntityList", revisionEntityList);
-        return "audit";
+        return "audit-movie";
+    }
+
+    @GetMapping("/actor")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public String findActorAudits(Model model) {
+        List<RevisionDto<Actor>> revisionEntityList = auditService.findActorsAudit();
+        model.addAttribute("revisionEntityList", revisionEntityList);
+        return "audit-actor";
     }
 }
