@@ -71,4 +71,21 @@ public class DirectorController {
         directorService.save(director);
         return "redirect:/director";
     }
+
+    @GetMapping("/edit/{id}")
+    @PreAuthorize("hasAnyAuthority('EDITOR', 'ADMIN')")
+    public String editDirectorPage(Model model, @PathVariable("id") long id) {
+        Director director = directorService.findById(id);
+        List<Country> countryList = countryService.findAll();
+        model.addAttribute("countries", countryList);
+        model.addAttribute("director", director);
+        return "director-edit";
+    }
+
+    @PostMapping("/edit/{id}")
+    @PreAuthorize("hasAnyAuthority('EDITOR', 'ADMIN')")
+    public String editDirector(@ModelAttribute("actor") Director director, @PathVariable("id") long id) {
+        directorService.save(director);
+        return String.format("redirect:/director/%d", id);
+    }
 }

@@ -1,6 +1,7 @@
 package org.example.movieapp.Service.Impl;
 
 import org.example.movieapp.Model.Actor;
+import org.example.movieapp.Model.Director;
 import org.example.movieapp.Model.Movie;
 import org.example.movieapp.Model.UserEntity;
 import org.example.movieapp.Repository.MovieRepository;
@@ -31,6 +32,7 @@ public class RecommendServiceImpl implements RecommendService {
         HashMap<Movie, Double> moviePriority = new HashMap<>();
         for(Movie movie : movies) {
             double score = findActorPriority(movie, userEntity.getActors());
+            score += findDirectorPriority(movie, userEntity.getDirectors());
             moviePriority.put(movie, score);
         }
         return filterMovies(moviePriority).stream().map(Map.Entry::getKey).toList();
@@ -42,6 +44,17 @@ public class RecommendServiceImpl implements RecommendService {
         for (Actor actor : actors) {
             if (movie.getActors().contains(actor)) {
                 score = score + 0.5;
+            }
+        }
+        return score;
+    }
+
+    @Override
+    public Double findDirectorPriority(Movie movie, List<Director> directors) {
+        double score = 0;
+        for (Director director : directors) {
+            if (movie.getDirectors().contains(director)) {
+                score = score + 1;
             }
         }
         return score;

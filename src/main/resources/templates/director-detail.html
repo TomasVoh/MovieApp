@@ -17,6 +17,9 @@
         <form sec:authorize="isAuthenticated()" method="POST" th:unless="${!user.getDirectors().contains(director)}" th:action="@{/rmFavourite/director/{id}(id=${director.id})}">
             <button type="submit" class="btn me-2" >Odebrat z oblíbených</button>
         </form>
+        <div sec:authorize="hasAnyAuthority('ADMIN', 'USER')">
+            <a class="btn" th:href="@{/director/edit/{id}(id=${director.id})}">Editovat</a>
+        </div>
     </div>
     <div class="card my-3">
         <div class="row g-0">

@@ -35,8 +35,8 @@ public class Actor {
     @NotAudited
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "actors")
     private List<Movie> movies;
-    @NotAudited
     @ManyToMany(fetch = FetchType.EAGER)
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @JoinTable(
             name = "actor_countries",
             joinColumns = @JoinColumn(name = "actor_id", referencedColumnName = "id"),

@@ -2,10 +2,7 @@ package org.example.movieapp.Service.Impl;
 
 import org.example.movieapp.Dto.PageDto;
 import org.example.movieapp.Dto.RegisterDto;
-import org.example.movieapp.Model.Actor;
-import org.example.movieapp.Model.Director;
-import org.example.movieapp.Model.Movie;
-import org.example.movieapp.Model.UserEntity;
+import org.example.movieapp.Model.*;
 import org.example.movieapp.Repository.*;
 import org.example.movieapp.Service.UserEntityService;
 import org.slf4j.Logger;
@@ -14,8 +11,8 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.NoSuchElementException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserEntityServiceImpl implements UserEntityService {
@@ -43,7 +40,9 @@ public class UserEntityServiceImpl implements UserEntityService {
 
     @Override
     public UserEntity findById(long id) {
-        return null;
+        UserEntity userEntity = userEntityRepository.findById(id).orElseThrow(NoSuchElementException::new);
+        logger.trace("userEntity: {} with {}", userEntity, id);
+        return userEntity;
     }
 
     @Override
@@ -70,6 +69,29 @@ public class UserEntityServiceImpl implements UserEntityService {
         UserEntity userEntity = userEntityRepository.findFirstByEmail(email);
         logger.trace("userEntity: {}", userEntity);
         return userEntity;
+    }
+
+    @Override
+    public List<Map.Entry<Genre, Double>> findUsersGenreRatio(String username) {
+        int genreCount = 0;
+        UserEntity user = userEntityRepository.findFirstByEmail(username);
+        HashMap<Genre, Double> genreRatio = new HashMap<>();
+        for(Movie movie : user.getMovies()) {
+            genreCount += movie.getGenres().size();
+            for(Genre genre : movie.getGenres()) {
+                if(genreRatio.containsKey(genre)) {
+                    genreRatio.put(genre, genreRatio.get(genre) + 1);
+                } else {
+                    genreRatio.put(genre, (double) 1);
+                }
+            }
+        }
+        for(Map.Entry<Genre, Double> entry : genreRatio.entrySet()) {
+            entry.setValue(entry.getValue() / genreCount * 100);
+        }
+        List<Map.Entry<Genre, Double>> priority = new ArrayList<>(genreRatio.entrySet());
+        priority.sort((firstEntry, secondEntry) -> secondEntry.getValue().compareTo(firstEntry.getValue()));
+        return priority;
     }
 
     @Override

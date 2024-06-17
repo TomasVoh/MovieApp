@@ -38,7 +38,7 @@ public class Movie {
     @Column(nullable = false)
     private String imagePath;
     @JsonBackReference
-    @NotAudited
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "movie_genres",
@@ -47,6 +47,7 @@ public class Movie {
     )
     private List<Genre> genres;
     @JsonManagedReference
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "actors_movies",
@@ -54,7 +55,8 @@ public class Movie {
             inverseJoinColumns = @JoinColumn(name = "actor_id", referencedColumnName = "id")
     )
     private List<Actor> actors;
-    @NotAudited
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "movies_country",
@@ -63,9 +65,10 @@ public class Movie {
     )
     private List<Country> countries;
     @NotAudited
+    @JsonIgnore
     @ManyToMany(mappedBy = "movies", fetch = FetchType.LAZY)
     private List<UserEntity> users;
-    @NotAudited
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "directors_movies",
@@ -74,6 +77,7 @@ public class Movie {
     )
     private List<Director> directors;
     @NotAudited
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "movie")
     private List<Review> reviews;
 }

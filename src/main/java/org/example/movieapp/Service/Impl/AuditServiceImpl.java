@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import org.example.movieapp.Dto.RevisionDto;
 import org.example.movieapp.Mapper.RevisionMapper;
 import org.example.movieapp.Model.Actor;
+import org.example.movieapp.Model.Director;
 import org.example.movieapp.Model.Movie;
 import org.example.movieapp.Service.AuditService;
 import org.hibernate.envers.AuditReaderFactory;
@@ -29,5 +30,11 @@ public class AuditServiceImpl implements AuditService {
     public List<RevisionDto<Actor>> findActorsAudit() {
         List<Object[]> results = AuditReaderFactory.get(entityManager).createQuery().forRevisionsOfEntity( Actor.class, false, true).getResultList();
         return RevisionMapper.fromRevisionsToRevisionDtos(results, Actor.class);
+    }
+
+    @Override
+    public List<RevisionDto<Director>> findDirectorsAudit() {
+        List<Object[]> results = AuditReaderFactory.get(entityManager).createQuery().forRevisionsOfEntity( Director.class, false, true).getResultList();
+        return RevisionMapper.fromRevisionsToRevisionDtos(results, Director.class);
     }
 }

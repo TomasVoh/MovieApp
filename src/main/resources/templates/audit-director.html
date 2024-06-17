@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
+    <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <title>Audit</title>
+</head>
+<body>
+<div th:replace="~{fragments/nav.html :: header}"></div>
+<main class="container my-2">
+    <div th:replace="~{fragments/nav.html :: audit}"></div>
+    <h3 class="my-2 text-light">Auditing režiserů</h3>
+    <table id="audit-table" class="table">
+        <thead th:fragment="thead">
+        <tr>
+            <th scope="col">Id entity</th>
+            <th scope="col">Název entity</th>
+            <th scope="col">Datum změny</th>
+            <th scope="col">Typ změny</th>
+            <th scope="col">Uživatel</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="revision : ${revisionEntityList}">
+            <td th:text="${revision.entity.id}"></td>
+            <td><a class="ref" th:href="@{/director/{id}(id=${revision.entity.id})}" th:text="${revision.entity.name} + ' ' + ${revision.entity.surname}"></a></td>
+            <td th:text="${#temporals.format(revision.getTimestamp(), 'dd.MM.yyyy HH:mm:ss')}"></td>
+            <td th:text="${revision.revType.getRepresentation() == 1 ? 'EDITACE' : (revision.getRevType().getRepresentation() == 2 ? 'SMAZÁNÍ' : 'PŘIDANÍ')}"></td>
+            <td th:text="${revision.username}"></td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+</body>
+</html>

@@ -1,6 +1,8 @@
 package org.example.movieapp.Controller;
 
 import org.example.movieapp.Dto.RegisterDto;
+import org.example.movieapp.Model.Genre;
+import org.example.movieapp.Model.UserEntity;
 import org.example.movieapp.Service.UserEntityService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +15,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.security.Principal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 public class AuthController {
@@ -40,6 +45,15 @@ public class AuthController {
     @GetMapping("/login")
     public String login() {
         return "login";
+    }
+
+    @GetMapping("/auth/{id}")
+    public String userDetailPage(Model model, @PathVariable("id") Long id) {
+        UserEntity userEntity = userEntityService.findById(id);
+        List<Map.Entry<Genre, Double>> genrePriority = userEntityService.findUsersGenreRatio(userEntity.getEmail());
+        model.addAttribute("genrePriority", genrePriority);
+        model.addAttribute("user", userEntity);
+        return "user-detail";
     }
 
     @PostMapping("/favourite/movie/{id}")

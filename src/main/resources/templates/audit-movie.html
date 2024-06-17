@@ -10,6 +10,7 @@
 <body>
     <div th:replace="~{fragments/nav.html :: header}"></div>
     <main class="container my-2">
+        <div th:replace="~{fragments/nav.html :: audit}"></div>
         <h3 class="my-2 text-light">Auditing filmu</h3>
         <table id="audit-table" class="table">
             <thead th:fragment="thead">

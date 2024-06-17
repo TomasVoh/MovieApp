@@ -5,19 +5,19 @@
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
     <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <title>Editovat herce</title>
+    <title>Editovat režiséra</title>
 </head>
 <body>
 <div th:replace="~{fragments/nav.html :: header}"></div>
 <main class="container my-2">
-    <h1 class="text-center">Editatovat herce</h1>
-    <form method="POST" th:action="@{/actor/edit/{id}(id=${actor.id})}" th:object="${actor}" enctype="multipart/form-data">
+    <h1 class="text-center">Editovat rešiséra</h1>
+    <form method="POST" th:action="@{/director/edit/{id}(id=${director.id})}" th:object="${director}" enctype="multipart/form-data">
         <div class="mb-3">
-            <label for="name" class="form-label">Jméno herce</label>
+            <label for="name" class="form-label">Jméno rešiséra</label>
             <input th:field="*{name}" type="text" class="form-control" id="name">
         </div>
         <div class="mb-3">
-            <label for="surname" class="form-label">Přijmení herce</label>
+            <label for="surname" class="form-label">Přijmení rešiséra</label>
             <input class="form-control" type="text" name="" id="surname" th:field="*{surname}">
         </div>
         <div class="mb-3">
@@ -27,7 +27,7 @@
             <label for="countries" class="form-label">Země, odkud herec pochází</label>
             <select multiple class="form-control" th:field="*{countries}" id="countries">
                 <option disabled value="0">Zvolit zemi/ě</option>
-                <option th:each="country : ${countryList}" th:text="${country.code}" th:value="${country.id}"></option>
+                <option th:each="country : ${countries}" th:text="${country.code}" th:value="${country.id}"></option>
             </select>
         </div>
         <div class="text-center">

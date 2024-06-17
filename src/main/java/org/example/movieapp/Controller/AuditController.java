@@ -2,6 +2,7 @@ package org.example.movieapp.Controller;
 
 import org.example.movieapp.Dto.RevisionDto;
 import org.example.movieapp.Model.Actor;
+import org.example.movieapp.Model.Director;
 import org.example.movieapp.Model.Movie;
 import org.example.movieapp.Service.AuditService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,5 +37,14 @@ public class AuditController {
         List<RevisionDto<Actor>> revisionEntityList = auditService.findActorsAudit();
         model.addAttribute("revisionEntityList", revisionEntityList);
         return "audit-actor";
+    }
+
+
+    @GetMapping("/director")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public String findDirectorAudits(Model model) {
+        List<RevisionDto<Director>> revisionEntityList = auditService.findDirectorsAudit();
+        model.addAttribute("revisionEntityList", revisionEntityList);
+        return "audit-director";
     }
 }
