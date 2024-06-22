@@ -28,7 +28,7 @@
                     <h1 th:text="${movie.name}"></h1>
                     <p th:text="'Délka: ' + ${movie.length} + ' minut'"></p>
                     <p>Žánry: <a class="ref" th:href="@{/movie/genre/{id}(id=${genre.id})}" th:each="genre : ${movie.genres}" th:text="${genre.name} +' '"></a></p>
-                    <p>Režisér: <a class="ref" th:href="@{/director/{id}(id=${director.id})}" th:each="director : ${movie.directors}" th:text="${director.name} + ' ' + ${director.surname}"></a></p>
+                    <p>Režisér: <a class="ref" th:href="@{/director/{id}(id=${director.id})}" th:each="director : ${movie.directors}" th:text="${director.name} + ' ' + ${director.surname} + ' '"></a></p>
                     <p>Herci: <a class="ref" th:href="@{/actor/{id}(id=${actor.id})}" th:each="actor : ${movie.actors}" th:text="${actor.name} + ' ' + ${actor.surname} + ' '"></a></p>
                     <p>Stát: <a th:href="@{/movie/country/{id}(id=${country.id})}" class="ref" th:each="country : ${movie.countries}" th:text="${country.code} + ' '"></a></p>
                     <p th:text="'Datum uvedení: ' + ${#temporals.format(movie.releaseDate, 'dd. MM. yyyy')}"></p>
@@ -51,7 +51,7 @@
                 <div class="card-body">
                     <p class="content" th:text="${review.content}"></p>
                     <div class="d-flex justify-content-between">
-                        <a class="ref" th:text="${review.user.name} + ' ' + ${review.user.surname}"></a>
+                        <a class="ref" th:href="@{/auth/{id}(id=${review.user.id})}" th:text="${review.user.name} + ' ' + ${review.user.surname}"></a>
                     </div>
                 </div>
             </div>

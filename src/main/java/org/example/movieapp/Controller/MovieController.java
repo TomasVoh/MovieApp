@@ -2,6 +2,7 @@ package org.example.movieapp.Controller;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.movieapp.Dto.PageDto;
+import org.example.movieapp.Dto.RequestMailDto;
 import org.example.movieapp.Model.*;
 import org.example.movieapp.Repository.MovieRepository;
 import org.example.movieapp.Service.*;
@@ -53,7 +54,9 @@ public class MovieController {
                                 @RequestParam(required = false, defaultValue = "25", name = "pageSize") int pageSize,
                                 Model model) {
         PageDto<Movie> movies = movieService.findAllByPage(pageNum, pageSize);
+        RequestMailDto requestMailDto = new RequestMailDto();
         logger.trace("paged movies: {}", movies);
+        model.addAttribute("mail", requestMailDto);
         model.addAttribute("movies", movies);
         return "movie-list";
     }

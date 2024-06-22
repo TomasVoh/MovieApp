@@ -5,12 +5,24 @@
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
     <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script defer th:src="@{/script/canvas.js}"></script>
     <title>Uživatel</title>
 </head>
 <body>
 <div th:replace="~{fragments/nav.html :: header}"></div>
 <main class="container my-2">
-    <h1>Uživatelovy preference</h1>
+    <div class="card my-3">
+        <div class="row g-0">
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 th:text="${user.name} + ' ' + ${user.surname}" class="card-title"></h5>
+                    <div th:if="${user.nickname != null}" th:text="'přezdívka: ' + ${user.nickname}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h4 class="text-light">Uživatelovy preference</h4>
+    <canvas width="1000px" height="300px"></canvas>
     <div class="my-2">
         <div th:each="priority : ${genrePriority}">
             <p class="ref" th:text="${priority.getKey().name} + ' ' + ${#numbers.formatDecimal(priority.getValue(), 0, 2)} + '%'"></p>

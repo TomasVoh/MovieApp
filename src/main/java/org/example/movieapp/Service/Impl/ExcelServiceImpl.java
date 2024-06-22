@@ -12,6 +12,7 @@ import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.example.movieapp.Model.Actor;
 import org.example.movieapp.Service.ExcelService;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Iterator;
+import java.util.List;
 
 @Service
 public class ExcelServiceImpl implements ExcelService {
@@ -27,7 +30,7 @@ public class ExcelServiceImpl implements ExcelService {
 
     public ExcelServiceImpl() {
         workbook = new XSSFWorkbook();
-        sheet = workbook.createSheet();
+        sheet = workbook.createSheet("Filmy");
     }
 
     @Override
@@ -59,6 +62,16 @@ public class ExcelServiceImpl implements ExcelService {
             cell.setCellValue((Long) value);
         } else if (value instanceof LocalDate) {
             cell.setCellValue((LocalDate) value);
+        } else if (value instanceof List<?>) {
+            Iterator<Object> values = ((List) value).iterator();
+            StringBuilder builder = new StringBuilder();
+            while (values.hasNext()) {
+                builder.append(values.next() + ", ");
+            }
+            if(builder.length() > 0) {
+                builder.delete(builder.lastIndexOf(","), builder.length());
+            }
+            cell.setCellValue(builder.toString());
         }
         cell.setCellStyle(style);
     }

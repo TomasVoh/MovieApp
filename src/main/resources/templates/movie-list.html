@@ -38,8 +38,19 @@
                     </div>
                 </div>
             </div>
-
         </div>
+        <h2 class="text-center">Dotazy</h2>
+        <form class="mail" th:action="@{/mail/send}" th:method="POST" th:object="${mail}">
+            <label for="to">Váš email</label>
+            <input id="to" class="form-control my-2" th:field="*{to}" type="text">
+            <label for="subject">Předmět</label>
+            <input id="subject" class="form-control my-2" th:field="*{subject}" type="text">
+            <label for="content">Obsah</label>
+            <input id="content" class="form-control my-2" th:field="*{body}" type="text">
+            <div class="text-center">
+                <button class="btn">Odeslat</button>
+            </div>
+        </form>
     </main>
 </body>
 </html>

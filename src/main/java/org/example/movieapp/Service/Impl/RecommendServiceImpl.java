@@ -1,28 +1,28 @@
 package org.example.movieapp.Service.Impl;
 
-import org.example.movieapp.Model.Actor;
-import org.example.movieapp.Model.Director;
-import org.example.movieapp.Model.Movie;
-import org.example.movieapp.Model.UserEntity;
+import org.example.movieapp.Model.*;
 import org.example.movieapp.Repository.MovieRepository;
 import org.example.movieapp.Repository.UserEntityRepository;
 import org.example.movieapp.Service.RecommendService;
+import org.example.movieapp.Service.UserEntityService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class RecommendServiceImpl implements RecommendService {
-
     private UserEntityRepository userEntityRepository;
     private MovieRepository movieRepository;
+    private UserEntityService userEntityService;
 
-    public RecommendServiceImpl(UserEntityRepository userEntityRepository, MovieRepository movieRepository) {
+    public RecommendServiceImpl(UserEntityRepository userEntityRepository, MovieRepository movieRepository, UserEntityService userEntityService) {
         this.userEntityRepository = userEntityRepository;
         this.movieRepository = movieRepository;
+        this.userEntityService = userEntityService;
     }
 
     @Override
@@ -33,6 +33,9 @@ public class RecommendServiceImpl implements RecommendService {
         for(Movie movie : movies) {
             double score = findActorPriority(movie, userEntity.getActors());
             score += findDirectorPriority(movie, userEntity.getDirectors());
+            for(Genre genre : movie.getGenres()) {
+                score += findGenrePriority(genre, username);
+            }
             moviePriority.put(movie, score);
         }
         return filterMovies(moviePriority).stream().map(Map.Entry::getKey).toList();
@@ -56,6 +59,16 @@ public class RecommendServiceImpl implements RecommendService {
             if (movie.getDirectors().contains(director)) {
                 score = score + 1;
             }
+        }
+        return score;
+    }
+
+    @Override
+    public Double findGenrePriority(Genre genre, String username) {
+        double score = 0;
+        Map<Genre, Double> genreDoubleHashMap = userEntityService.findUsersGenreRatio(username).entrySet().stream().filter(entry -> entry.getValue() > 10).collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue()));
+        if(genreDoubleHashMap.containsKey(genre)) {
+            score = score + 0.2;
         }
         return score;
     }

@@ -50,7 +50,7 @@ public class AuthController {
     @GetMapping("/auth/{id}")
     public String userDetailPage(Model model, @PathVariable("id") Long id) {
         UserEntity userEntity = userEntityService.findById(id);
-        List<Map.Entry<Genre, Double>> genrePriority = userEntityService.findUsersGenreRatio(userEntity.getEmail());
+        List<Map.Entry<Genre, Double>> genrePriority = userEntityService.findUsersGenreRatioList(userEntity.getEmail());
         model.addAttribute("genrePriority", genrePriority);
         model.addAttribute("user", userEntity);
         return "user-detail";

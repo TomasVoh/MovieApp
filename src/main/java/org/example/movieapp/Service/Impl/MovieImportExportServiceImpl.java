@@ -1,13 +1,13 @@
 package org.example.movieapp.Service.Impl;
 
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.example.movieapp.Model.Actor;
+import org.example.movieapp.Model.Country;
 import org.example.movieapp.Model.Movie;
-import org.example.movieapp.Repository.MovieRepository;
+import org.example.movieapp.Repository.*;
 import org.example.movieapp.Service.ExcelService;
 import org.example.movieapp.Service.MovieImportExportService;
 import org.springframework.stereotype.Service;
@@ -15,24 +15,33 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 public class MovieImportExportServiceImpl implements MovieImportExportService {
     private ExcelService excelService;
     private MovieRepository movieRepository;
+    private GenreRepository genreRepository;
+    private ActorRepository actorRepository;
+    private CountryRepository countryRepository;
+    private DirectorRepository directorRepository;
 
-    public MovieImportExportServiceImpl(ExcelService excelService, MovieRepository movieRepository) {
+    public MovieImportExportServiceImpl(ExcelService excelService, MovieRepository movieRepository, GenreRepository genreRepository, ActorRepository actorRepository, CountryRepository countryRepository, DirectorRepository directorRepository) {
         this.excelService = excelService;
         this.movieRepository = movieRepository;
+        this.genreRepository = genreRepository;
+        this.actorRepository = actorRepository;
+        this.countryRepository = countryRepository;
+        this.directorRepository = directorRepository;
     }
 
     @Override
     public void exportToExcel(HttpServletResponse response) {
         List<Movie> movieList = movieRepository.findAll();
-        excelService.writeHeaders(new String[]{"Id", "Název", "Popis", "Délka", "Datum vydání", "Cesta k obrázku"});
+        excelService.writeHeaders(new String[]{"Id", "Název", "Popis", "Délka", "Datum vydání", "Cesta k obrázku", "Žánry", "Herci", "Země", "Režisér/i"});
         int startRow = 1;
         for (Movie movie : movieList) {
             Row row = excelService.getWorkBook().getSheetAt(0).createRow(startRow);
@@ -42,9 +51,12 @@ public class MovieImportExportServiceImpl implements MovieImportExportService {
             excelService.createCell(row, columnCount++, movie.getDescription(), null);
             excelService.createCell(row, columnCount++, movie.getLength(), null);
             excelService.createCell(row, columnCount++, movie.getReleaseDate(), null);
-            excelService.createCell(row, columnCount, movie.getImagePath(), null);
+            excelService.createCell(row, columnCount++, movie.getImagePath(), null);
+            excelService.createCell(row, columnCount++, movie.getGenres().stream().map(genre -> genre.getId().toString()).toList(), null);
+            excelService.createCell(row, columnCount++, movie.getActors().stream().map((actor) -> actor.getId().toString()).toList(), null);
+            excelService.createCell(row, columnCount++, movie.getCountries().stream().map((country) -> country.getId().toString()).toList(), null);
             startRow++;
-        }
+            excelService.createCell(row, columnCount, movie.getDirectors().stream().map((director) -> director.getId().toString()).toList(), null);        }
         excelService.initResponse(response, "movie");
     }
 
@@ -53,15 +65,31 @@ public class MovieImportExportServiceImpl implements MovieImportExportService {
         try {
             InputStream inputStream = file.getInputStream();
             XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
+            DataFormatter dataFormatter = new DataFormatter();
             XSSFSheet sheet = workbook.getSheetAt(0);
-            for (int i = 1; i < sheet.getLastRowNum(); i++) {
+            for (int i = 1; i <= sheet.getLastRowNum(); i++) {
                 Row row = sheet.getRow(i);
-                Movie movie = movieRepository.findById((long) row.getCell(0).getNumericCellValue()).orElseThrow(NoSuchElementException::new);
+                Movie movie;
+                if(row.getCell(0) == null) {
+                    movie = new Movie();
+                } else {
+                    movie = movieRepository.findById((long) row.getCell(0).getNumericCellValue()).orElse(null);
+                }
                 movie.setName(row.getCell(1).getStringCellValue());
                 movie.setDescription(row.getCell(2).getStringCellValue());
                 movie.setLength((int) row.getCell(3).getNumericCellValue());
                 movie.setReleaseDate(row.getCell(4).getLocalDateTimeCellValue().toLocalDate());
                 movie.setImagePath(row.getCell(5).getStringCellValue());
+                movie.setGenres(Arrays.stream(row.getCell(6).getStringCellValue().split(", ")).map((id) -> genreRepository.findById(Long.parseLong(id)).orElseThrow(NoSuchElementException::new)).collect(Collectors.toList()));
+                movie.setActors(Arrays.stream(row.getCell(7).getStringCellValue().split(", ")).map((id) -> {
+                    Actor actor = actorRepository.findById(Long.parseLong(id)).orElseThrow(NoSuchElementException::new);
+                    return actor;
+                }).collect(Collectors.toList()));
+                movie.setCountries(Arrays.stream(dataFormatter.formatCellValue(row.getCell(8)).split(", ")).map((id) -> {
+                    Country country = countryRepository.findById(Long.parseLong(id)).orElseThrow(NoSuchElementException::new);
+                    return country;
+                }).collect(Collectors.toList()));
+                movie.setDirectors(Arrays.stream(dataFormatter.formatCellValue(row.getCell(9)).split(", ")).map((id) -> directorRepository.findById(Long.parseLong(id)).orElseThrow(NoSuchElementException::new)).collect(Collectors.toList()));
                 movieRepository.save(movie);
             }
         } catch (IOException e) {

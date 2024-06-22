@@ -13,7 +13,8 @@ import java.util.Map;
 public interface UserEntityService extends PageReadAndWriteService<UserEntity>{
     void registerUser(RegisterDto registerDto);
     UserEntity findUserByEmail(String email);
-    List<Map.Entry<Genre, Double>> findUsersGenreRatio(String username);
+    HashMap<Genre, Double> findUsersGenreRatio(String username);
+    List<Map.Entry<Genre, Double>> findUsersGenreRatioList(String username);
     void addToFavouriteMovie(long movieId, String userEmail);
     void removeFromFavouriteMovie(long movieId, String userEmail);
     void addToFavouriteActor(long actorId, String userEmail);

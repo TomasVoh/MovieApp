@@ -72,7 +72,7 @@ public class UserEntityServiceImpl implements UserEntityService {
     }
 
     @Override
-    public List<Map.Entry<Genre, Double>> findUsersGenreRatio(String username) {
+    public HashMap<Genre, Double> findUsersGenreRatio(String username) {
         int genreCount = 0;
         UserEntity user = userEntityRepository.findFirstByEmail(username);
         HashMap<Genre, Double> genreRatio = new HashMap<>();
@@ -89,6 +89,12 @@ public class UserEntityServiceImpl implements UserEntityService {
         for(Map.Entry<Genre, Double> entry : genreRatio.entrySet()) {
             entry.setValue(entry.getValue() / genreCount * 100);
         }
+        return genreRatio;
+    }
+
+    @Override
+    public List<Map.Entry<Genre, Double>> findUsersGenreRatioList(String username) {
+        HashMap<Genre, Double> genreRatio = findUsersGenreRatio(username);
         List<Map.Entry<Genre, Double>> priority = new ArrayList<>(genreRatio.entrySet());
         priority.sort((firstEntry, secondEntry) -> secondEntry.getValue().compareTo(firstEntry.getValue()));
         return priority;
