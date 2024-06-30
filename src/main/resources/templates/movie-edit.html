@@ -12,7 +12,7 @@
     <div th:replace="~{fragments/nav.html :: header}"></div>
     <main class="container my-2">
         <h1 class="text-center">Editovat film</h1>
-        <form method="POST" th:object="${movie}" th:action="@{/movie/edit/{id}(id=${movie.id})}">
+        <form enctype="multipart/form-data" method="POST" th:object="${movie}" th:action="@{/movie/edit/{id}(id=${movie.id})}">
             <div class="mb-3">
                 <label for="name" class="form-label">Název filmu</label>
                 <input th:field="*{name}" type="text" class="form-control" id="name">
@@ -26,7 +26,11 @@
                 <input th:field="*{length}" type="number" class="form-control" id="length">
             </div>
             <div class="mb-3">
-                <input type="text" style="display: none" th:field="*{imagePath}" name="image" class="form-control" id="image">
+                <label for="image">Obrázek</label>
+                <input id="image" type="file" name="image" class="form-control">
+            </div>
+            <div class="mb-3">
+                <input type="text" style="display: none" th:field="*{imagePath}" class="form-control">
             </div>
             <div class="mb-3">
                 <label for="genres" class="form-label">Žánry</label>

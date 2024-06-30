@@ -1,10 +1,12 @@
 package org.example.movieapp.Mapper;
 
+import org.example.movieapp.Dto.PageDto;
 import org.example.movieapp.Dto.RevisionDto;
 import org.example.movieapp.Model.Actor;
 import org.example.movieapp.Model.CustomRevisionEntity;
 import org.example.movieapp.Model.Movie;
 import org.hibernate.envers.RevisionType;
+import org.springframework.data.domain.Page;
 import org.springframework.data.history.Revision;
 
 import java.time.Instant;
@@ -14,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RevisionMapper {
-    public static <T> List<RevisionDto<T>> fromRevisionsToRevisionDtos(List<Object[]> moviesAudit, Class<T> clazz) {
+    public static <T> PageDto<RevisionDto<T>> fromRevisionsToRevisionDtos(List<Object[]> moviesAudit, Class<T> clazz, int page, int size) {
         List<RevisionDto<T>> revisionDtos = new ArrayList<>();
         for (int i = 0; i < moviesAudit.size(); i++) {
             Object[] revisionAud = moviesAudit.get(i);
@@ -27,6 +29,16 @@ public class RevisionMapper {
             revisionDto.setRevType((RevisionType) revisionAud[2]);
             revisionDtos.add(revisionDto);
         }
-        return revisionDtos.reversed();
+        List<RevisionDto<T>> data = revisionDtos.reversed().subList(page * size, (page * size + size) < revisionDtos.size() ? (page * size + size) : revisionDtos.size());
+        int totalPages = revisionDtos.size() / size;
+        if(revisionDtos.size() % size != 0) {
+            totalPages++;
+        }
+        PageDto<RevisionDto<T>> pageDto = new PageDto<>();
+        pageDto.setPageSize(size);
+        pageDto.setPageNum(page);
+        pageDto.setContent(data);
+        pageDto.setTotalPages(totalPages);
+        return pageDto;
     }
 }

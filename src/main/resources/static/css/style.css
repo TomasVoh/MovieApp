@@ -160,3 +160,28 @@ main .btn:hover {
     background: #1d191d;
     color: white;
 }
+
+.mail div:nth-child(1) {
+    grid-area: left;
+}
+
+.mail div:nth-child(2) {
+    grid-area: right;
+}
+
+.mail div:nth-child(3) {
+    grid-area: menu;
+}
+
+.mail div:nth-child(4) {
+    grid-area: footer;
+}
+
+.mail {
+    display: grid;
+    grid-template-areas:
+    'left left left right right right'
+    'menu menu menu menu menu menu'
+    'footer footer footer footer footer footer';
+    gap: 20px;
+}

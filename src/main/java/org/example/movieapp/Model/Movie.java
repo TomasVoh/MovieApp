@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.User;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 
@@ -80,4 +81,18 @@ public class Movie {
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "movie")
     private List<Review> reviews;
+
+    @Override
+    public boolean equals(Object o) {
+        Movie movie = (Movie) o;
+        return  movie.getName().equals(this.name) &&
+                movie.getDescription().equals(this.getDescription()) &&
+                movie.getReleaseDate().equals(this.getReleaseDate()) &&
+                movie.getLength() == this.getLength() &&
+                movie.getImagePath().equals(this.getImagePath()) &&
+                movie.getGenres().equals(this.getGenres()) &&
+                movie.getCountries().equals(this.getCountries()) &&
+                movie.getActors().equals(this.getActors()) &&
+                movie.getDirectors().equals(this.getDirectors());
+    }
 }

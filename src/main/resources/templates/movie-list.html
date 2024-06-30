@@ -41,16 +41,39 @@
         </div>
         <h2 class="text-center">Dotazy</h2>
         <form class="mail" th:action="@{/mail/send}" th:method="POST" th:object="${mail}">
-            <label for="to">Váš email</label>
-            <input id="to" class="form-control my-2" th:field="*{to}" type="text">
-            <label for="subject">Předmět</label>
-            <input id="subject" class="form-control my-2" th:field="*{subject}" type="text">
-            <label for="content">Obsah</label>
-            <input id="content" class="form-control my-2" th:field="*{body}" type="text">
+            <div>
+                <label for="to">Váš email</label>
+                <input id="to" class="form-control my-2" th:field="*{to}" type="text">
+            </div>
+            <div>
+                <label for="subject">Předmět</label>
+                <input id="subject" class="form-control my-2" th:field="*{subject}" type="text">
+            </div>
+            <div>
+                <label for="content">Obsah</label>
+                <input id="content" class="form-control my-2" th:field="*{body}" type="text">
+            </div>
             <div class="text-center">
                 <button class="btn">Odeslat</button>
             </div>
         </form>
+        <nav class="d-flex justify-content-center my-3" aria-label="Page navigation example">
+            <ul class="pagination text-light">
+                <li class="page-item">
+                    <a class="page-link bg-dark border-0" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li th:each="pageNum : ${#numbers.sequence(1, movies.getTotalPages(), 1)}" class="page-item">
+                    <a th:href="@{/movie(pageNum=${pageNum - 1})}" th:text="${pageNum}" class="page-link bg-dark border-0" href="#"></a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link bg-dark border-0" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </main>
 </body>
 </html>

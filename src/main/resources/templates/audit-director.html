@@ -23,7 +23,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="revision : ${revisionEntityList}">
+        <tr th:each="revision : ${revisionEntityList.content}">
             <td th:text="${revision.entity.id}"></td>
             <td><a class="ref" th:href="@{/director/{id}(id=${revision.entity.id})}" th:text="${revision.entity.name} + ' ' + ${revision.entity.surname}"></a></td>
             <td th:text="${#temporals.format(revision.getTimestamp(), 'dd.MM.yyyy HH:mm:ss')}"></td>
@@ -33,5 +33,23 @@
         </tbody>
     </table>
 </main>
+<nav class="d-flex justify-content-center my-3" aria-label="Page navigation example">
+    <ul class="pagination text-light">
+        <li class="page-item">
+            <a class="page-link bg-dark border-0" href="#" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        <li th:each="pageNum : ${#numbers.sequence(1, revisionEntityList.getTotalPages(), 1)}" class="page-item">
+            <a th:href="@{/audit/director(pageNum=${pageNum - 1})}" th:text="${pageNum}" class="page-link bg-dark border-0" href="#"></a>
+        </li>
+        <li class="page-item">
+            <a class="page-link bg-dark border-0" href="#" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+
 </body>
 </html>

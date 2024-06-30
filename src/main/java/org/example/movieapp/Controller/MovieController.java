@@ -122,7 +122,11 @@ public class MovieController {
 
     @PostMapping("/edit/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'EDITOR')")
-    public String updateMovie(@PathVariable("id") long id, @ModelAttribute("movie") Movie movie) {
+    public String updateMovie(@PathVariable("id") long id, @ModelAttribute("movie") Movie movie, @RequestParam("image") MultipartFile multipartFile) {
+        if(!multipartFile.isEmpty()) {
+            String filePath = imageService.saveImage(multipartFile);
+            movie.setImagePath(filePath);
+        }
         movieRepository.save(movie);
         return String.format("redirect:/movie/%d", id);
     }

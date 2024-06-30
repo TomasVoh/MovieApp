@@ -10,6 +10,8 @@ import org.example.movieapp.Model.Movie;
 import org.example.movieapp.Repository.*;
 import org.example.movieapp.Service.ExcelService;
 import org.example.movieapp.Service.MovieImportExportService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,6 +30,7 @@ public class MovieImportExportServiceImpl implements MovieImportExportService {
     private ActorRepository actorRepository;
     private CountryRepository countryRepository;
     private DirectorRepository directorRepository;
+    private Logger logger = LoggerFactory.getLogger(MovieImportExportServiceImpl.class);
 
     public MovieImportExportServiceImpl(ExcelService excelService, MovieRepository movieRepository, GenreRepository genreRepository, ActorRepository actorRepository, CountryRepository countryRepository, DirectorRepository directorRepository) {
         this.excelService = excelService;
@@ -55,8 +58,9 @@ public class MovieImportExportServiceImpl implements MovieImportExportService {
             excelService.createCell(row, columnCount++, movie.getGenres().stream().map(genre -> genre.getId().toString()).toList(), null);
             excelService.createCell(row, columnCount++, movie.getActors().stream().map((actor) -> actor.getId().toString()).toList(), null);
             excelService.createCell(row, columnCount++, movie.getCountries().stream().map((country) -> country.getId().toString()).toList(), null);
+            excelService.createCell(row, columnCount, movie.getDirectors().stream().map((director) -> director.getId().toString()).toList(), null);
             startRow++;
-            excelService.createCell(row, columnCount, movie.getDirectors().stream().map((director) -> director.getId().toString()).toList(), null);        }
+        }
         excelService.initResponse(response, "movie");
     }
 
@@ -67,14 +71,14 @@ public class MovieImportExportServiceImpl implements MovieImportExportService {
             XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
             DataFormatter dataFormatter = new DataFormatter();
             XSSFSheet sheet = workbook.getSheetAt(0);
+            System.out.println(sheet.getLastRowNum());
             for (int i = 1; i <= sheet.getLastRowNum(); i++) {
                 Row row = sheet.getRow(i);
-                Movie movie;
-                if(row.getCell(0) == null) {
-                    movie = new Movie();
-                } else {
-                    movie = movieRepository.findById((long) row.getCell(0).getNumericCellValue()).orElse(null);
+                if(row == null) {
+                    return;
                 }
+                logger.info(String.valueOf(i));
+                Movie movie = new Movie();
                 movie.setName(row.getCell(1).getStringCellValue());
                 movie.setDescription(row.getCell(2).getStringCellValue());
                 movie.setLength((int) row.getCell(3).getNumericCellValue());
@@ -90,6 +94,18 @@ public class MovieImportExportServiceImpl implements MovieImportExportService {
                     return country;
                 }).collect(Collectors.toList()));
                 movie.setDirectors(Arrays.stream(dataFormatter.formatCellValue(row.getCell(9)).split(", ")).map((id) -> directorRepository.findById(Long.parseLong(id)).orElseThrow(NoSuchElementException::new)).collect(Collectors.toList()));
+                if(row.getCell(0) != null) {
+                    Movie oldMovie = movieRepository.findById((long)row.getCell(0).getNumericCellValue()).orElse(null);
+                    if(oldMovie != null) {
+                        if(oldMovie.equals(movie)) {
+                            logger.info("žádná editace");
+                            return;
+                        } else {
+                            logger.info("editace");
+                            movie.setId(oldMovie.getId());
+                        }
+                    }
+                }
                 movieRepository.save(movie);
             }
         } catch (IOException e) {
