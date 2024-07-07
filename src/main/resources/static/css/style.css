@@ -185,3 +185,13 @@ main .btn:hover {
     'footer footer footer footer footer footer';
     gap: 20px;
 }
+
+
+#accordionPanelsStayOpenExample >* {
+    background: #1d191d;
+    border: none;
+}
+
+#accordion-header {
+    background: #1d191d;
+}

@@ -24,7 +24,79 @@
                 <input style="display: none" type="file" name="file" id="upload">
             </form>
         </div>
-        <div>
+        <div class="accordion my-3" id="accordionPanelsStayOpenExample">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button text-light border-0" id="accordion-header" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                        Filtrování
+                    </button>
+                </h2>
+                <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        <form th:method="GET" action="/movie">
+                            <div>
+                                <label class="my-2" for="name">Jméno filmu</label>
+                                <input th:value="${param.name}" class="form-control" id="name" type="text" name="name">
+                            </div>
+                            <div class="my-2">
+                                <p class="text-light">Délka filmu</p>
+                                <div class="row">
+                                    <div class="col">
+                                        <label for="minLen">Minimální délka</label>
+                                        <input th:value="${param.minLen}" class="form-control" id="minLen" type="number" name="minLen">
+                                    </div>
+                                    <div class="col">
+                                        <label for="maxLen">maximální délka</label>
+                                        <input th:value="${param.maxLen}" class="form-control" id="maxLen" type="number" name="maxLen">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="my-2">
+                                <p class="text-light">Vydání filmu</p>
+                                <div class="row">
+                                    <div class="col">
+                                        <label for="minDate">Minimální datum</label>
+                                        <input th:value="${param.minLen}" class="form-control" id="minDate" type="date" name="minDate">
+                                    </div>
+                                    <div class="col">
+                                        <label for="maxDate">Maximální datum</label>
+                                        <input th:value="${param.maxLen}" class="form-control" id="maxDate" type="date" name="maxDate">
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="genres">Žánry</label>
+                                <select name="genres" id="genres" multiple class="form-control">
+                                    <option th:selected="${genresParam != null && genresParam.contains(genre)} ? true : false" th:each="genre : ${genres}" th:text="${genre.name}" th:value="${genre.id}"></option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="countries">Země</label>
+                                <select name="countries" id="countries" multiple class="form-control">
+                                    <option th:each="country : ${countries}" th:text="${country.name}" th:value="${country.id}"></option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="actors">Herci</label>
+                                <select name="actors" id="actors" multiple class="form-control">
+                                    <option th:each="actor : ${actors}" th:text="${actor.name} + ' ' + ${actor.surname}" th:value="${actor.id}"></option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="directors">Režiséři</label>
+                                <select name="directors" id="directors" multiple class="form-control">
+                                    <option th:each="director : ${directors}" th:text="${director.name} + ' ' + ${director.surname}" th:value="${director.id}"></option>
+                                </select>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn my-1">Filtrovat</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <div>
             <div class="content-block row row-cols-3">
                 <div th:each="movie : ${movies.content}" class="card p-0 mx-2 mb-3 overflow-hidden" style="width: 18rem;">
                     <div class="card-header">

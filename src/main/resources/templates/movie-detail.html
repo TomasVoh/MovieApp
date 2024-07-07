@@ -52,6 +52,7 @@
                     <p class="content" th:text="${review.content}"></p>
                     <div class="d-flex justify-content-between">
                         <a class="ref" th:href="@{/auth/{id}(id=${review.user.id})}" th:text="${review.user.name} + ' ' + ${review.user.surname}"></a>
+                        <p style="color: #ebeb05" th:text="${review.rating}"></p>
                     </div>
                 </div>
             </div>

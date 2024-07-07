@@ -22,7 +22,7 @@
                     <li class="nav-item">
                         <a class="text-light nav-link" href="/director">Režiséři</a>
                     </li>
-                    <li class="nav-item">
+                    <li sec:authorize="isAuthenticated()" class="nav-item">
                         <a class="text-light nav-link" href="/recommend">Doporučení</a>
                     </li>
                     <li sec:authorize="!isAuthenticated()" class="nav-item">

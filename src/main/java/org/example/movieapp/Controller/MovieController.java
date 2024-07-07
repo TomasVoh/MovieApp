@@ -4,7 +4,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.example.movieapp.Dto.PageDto;
 import org.example.movieapp.Dto.RequestMailDto;
 import org.example.movieapp.Model.*;
-import org.example.movieapp.Repository.MovieRepository;
 import org.example.movieapp.Service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +22,6 @@ import java.util.List;
 @Controller
 @RequestMapping("/movie")
 public class MovieController {
-    private final MovieRepository movieRepository;
     private MovieService movieService;
     private GenreService genreService;
     private ReviewService reviewService;
@@ -35,7 +33,7 @@ public class MovieController {
     private ImageService imageService;
     private Logger logger = LoggerFactory.getLogger(MovieController.class);
 
-    public MovieController(MovieService movieService, GenreService genreService, ReviewService reviewService, UserEntityService userEntityService, DirectorService directorService, ActorService actorService, MovieImportExportService movieImportExportService, CountryService countryService, ImageService imageService, MovieRepository movieRepository) {
+    public MovieController(MovieService movieService, GenreService genreService, ReviewService reviewService, UserEntityService userEntityService, DirectorService directorService, ActorService actorService, MovieImportExportService movieImportExportService, CountryService countryService, ImageService imageService) {
         this.movieService = movieService;
         this.genreService = genreService;
         this.reviewService = reviewService;
@@ -45,19 +43,36 @@ public class MovieController {
         this.movieImportExportService = movieImportExportService;
         this.countryService = countryService;
         this.imageService = imageService;
-        this.movieRepository = movieRepository;
     }
 
 
     @GetMapping
     public String findAllMovies(@RequestParam(required = false, defaultValue = "0", name = "pageNum") int pageNum,
                                 @RequestParam(required = false, defaultValue = "25", name = "pageSize") int pageSize,
+                                @RequestParam(name = "name", required = false) String name,
+                                @RequestParam(name = "minLen", required = false, defaultValue = "0") int minLength,
+                                @RequestParam(name = "maxLen", required = false, defaultValue = "1000") int maxLength,
+                                @RequestParam(name = "minDate", required = false) LocalDate minDate,
+                                @RequestParam(name = "maxDate", required = false) LocalDate maxDate,
+                                @RequestParam(name = "genres", required = false) List<Genre> genres,
+                                @RequestParam(name = "actors", required = false) List<Actor> actors,
+                                @RequestParam(name = "directors", required = false) List<Director> directors,
+                                @RequestParam(name = "countries", required = false) List<Country> countries,
                                 Model model) {
-        PageDto<Movie> movies = movieService.findAllByPage(pageNum, pageSize);
+        PageDto<Movie> movies = movieService.findMoviesWithFilter(name, minLength, maxLength, minDate, maxDate, genres, countries, actors, directors, pageNum, pageSize);
         RequestMailDto requestMailDto = new RequestMailDto();
+        List<Genre> genreList = genreService.findAll();
+        List<Actor> actorsList = actorService.findAll();
+        List<Director> directorList = directorService.findAll();
+        List<Country> countriesList = countryService.findAll();
         logger.trace("paged movies: {}", movies);
         model.addAttribute("mail", requestMailDto);
         model.addAttribute("movies", movies);
+        model.addAttribute("genres", genreList);
+        model.addAttribute("genresParam", genres);
+        model.addAttribute("actors", actorsList);
+        model.addAttribute("directors", directorList);
+        model.addAttribute("countries", countriesList);
         return "movie-list";
     }
 
@@ -127,7 +142,7 @@ public class MovieController {
             String filePath = imageService.saveImage(multipartFile);
             movie.setImagePath(filePath);
         }
-        movieRepository.save(movie);
+        movieService.save(movie);
         return String.format("redirect:/movie/%d", id);
     }
 
@@ -181,7 +196,7 @@ public class MovieController {
     }
 
     @PostMapping("/import/excel")
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'EDITOR')")
     public String importFromExcel(@RequestParam("file") MultipartFile file) {
         movieImportExportService.importFromExcel(file);
         return "redirect:/movie";

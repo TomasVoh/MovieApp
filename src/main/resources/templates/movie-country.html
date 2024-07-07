@@ -10,7 +10,6 @@
 <div th:replace="~{fragments/nav.html :: header}"></div>
 <main class="container my-2">
     <h1 class="text-center" th:text="'Země ' + ${country.name}"></h1>
-    <div class="placeholder col-12"></div>
     <div class="row row-cols-3">
         <div th:each="movie : ${movies.content}" class="card p-0 mx-2 mb-3 overflow-hidden" style="width: 18rem;">
             <div class="card-header">
