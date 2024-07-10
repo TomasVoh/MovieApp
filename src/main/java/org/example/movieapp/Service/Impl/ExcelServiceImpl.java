@@ -28,9 +28,10 @@ public class ExcelServiceImpl implements ExcelService {
     protected XSSFWorkbook workbook;
     protected XSSFSheet sheet;
 
-    public ExcelServiceImpl() {
+    public Sheet createWorkbook(String sheetName) {
         workbook = new XSSFWorkbook();
-        sheet = workbook.createSheet("Filmy");
+        sheet = workbook.createSheet(sheetName);
+        return sheet;
     }
 
     @Override
@@ -89,11 +90,6 @@ public class ExcelServiceImpl implements ExcelService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @Override
-    public Workbook getWorkBook() {
-        return workbook;
     }
 
 }

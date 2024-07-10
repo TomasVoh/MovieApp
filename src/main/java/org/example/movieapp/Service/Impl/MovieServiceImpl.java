@@ -38,6 +38,25 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
+    public PageDto<Movie> findMoviesWithFilter(String nameLike, int minLength, int maxLength, LocalDate minDate, LocalDate maxDate, List<Genre> genres, List<Country> countries, List<Actor> actors, List<Director> directors, int page, int size) {
+        Specification<Movie> specification = Specification.where(StringUtils.isBlank(nameLike) ? null : MovieSpecificationFilter.nameLike(nameLike))
+                .and(MovieSpecificationFilter.lengthInterval(minLength, maxLength)
+                        .and(minDate != null  && maxDate != null ? MovieSpecificationFilter.releaseDateInterval(minDate, maxDate) : null)
+                        .and(genres != null ? MovieSpecificationFilter.genreEquals(genres) : null)
+                        .and(actors != null ? MovieSpecificationFilter.actorEquals(actors) : null)
+                        .and(countries != null ? MovieSpecificationFilter.countryEquals(countries) : null)
+                        .and(directors != null ? MovieSpecificationFilter.directorEquals(directors) : null));
+        Page<Movie> movies = movieRepository.findAll(specification, PageRequest.of(page, size));
+        PageDto<Movie> pageDto = PageMapper.pageMapper(movies);
+        return pageDto;
+    }
+
+    @Override
+    public List<Movie> findAll() {
+        return movieRepository.findAll();
+    }
+
+    @Override
     public Movie findById(long id) {
         Movie movie = movieRepository.findById(id).orElseThrow(NoSuchElementException::new);
         logger.trace("movie with id: {}", movie);
@@ -67,17 +86,5 @@ public class MovieServiceImpl implements MovieService {
         return pageMovies;
     }
 
-    @Override
-    public PageDto<Movie> findMoviesWithFilter(String nameLike, int minLength, int maxLength, LocalDate minDate, LocalDate maxDate, List<Genre> genres, List<Country> countries, List<Actor> actors, List<Director> directors, int page, int size) {
-        Specification<Movie> specification = Specification.where(StringUtils.isBlank(nameLike) ? null : MovieSpecificationFilter.nameLike(nameLike))
-                .and(MovieSpecificationFilter.lengthInterval(minLength, maxLength)
-                        .and(minDate != null  && maxDate != null ? MovieSpecificationFilter.releaseDateInterval(minDate, maxDate) : null)
-                        .and(genres != null ? MovieSpecificationFilter.genreEquals(genres) : null)
-                        .and(actors != null ? MovieSpecificationFilter.actorEquals(actors) : null)
-                        .and(countries != null ? MovieSpecificationFilter.countryEquals(countries) : null)
-                        .and(directors != null ? MovieSpecificationFilter.directorEquals(directors) : null));
-        Page<Movie> movies = movieRepository.findAll(specification, PageRequest.of(page, size));
-        PageDto<Movie> pageDto = PageMapper.pageMapper(movies);
-        return pageDto;
-    }
+
 }

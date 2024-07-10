@@ -5,15 +5,17 @@
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
     <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+
     <title>Režiséři</title>
 </head>
 <body>
 <div th:replace="~{fragments/nav.html :: header}"></div>
 <main class="container my-2">
     <div class="">
-        <a href="/director/new" sec:authorize="hasAnyAuthority('ADMIN')" class="btn my-1">Přidat režiséra</a>
+        <a href="/director/new" sec:authorize="hasAnyAuthority('ADMIN', 'EDITOR')" class="btn my-1">Přidat režiséra</a>
         <div class="content-block row row-cols-3">
             <div th:each="director : ${directorsPage.content}" class="card p-0 mx-2 mb-3 overflow-hidden" style="width: 18rem;">
+                <p sec:authorize="hasAnyAuthority('ADMIN')" class="m-2" style="color: #ebeb05" th:text="'ID: ' + ${director.id}"></p>
                 <img th:src="@{/{path}(path=${director.imagePath})}" class="card-img-top" alt="herec">
                 <div class="card-body">
                     <h5 class="card-title" th:text="${director.name} + ' ' + ${director.surname}"></h5>

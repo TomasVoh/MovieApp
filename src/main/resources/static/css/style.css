@@ -187,7 +187,7 @@ main .btn:hover {
 }
 
 
-#accordionPanelsStayOpenExample >* {
+#accordion > * {
     background: #1d191d;
     border: none;
 }

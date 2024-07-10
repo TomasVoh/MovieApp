@@ -73,6 +73,9 @@ public class MovieController {
         model.addAttribute("actors", actorsList);
         model.addAttribute("directors", directorList);
         model.addAttribute("countries", countriesList);
+        model.addAttribute("countriesParam", countries);
+        model.addAttribute("actorsParam", actors);
+        model.addAttribute("directorsParam", directors);
         return "movie-list";
     }
 

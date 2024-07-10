@@ -44,10 +44,11 @@ public class MovieImportExportServiceImpl implements MovieImportExportService {
     @Override
     public void exportToExcel(HttpServletResponse response) {
         List<Movie> movieList = movieRepository.findAll();
+        Sheet sheet = excelService.createWorkbook("filmy");
         excelService.writeHeaders(new String[]{"Id", "Název", "Popis", "Délka", "Datum vydání", "Cesta k obrázku", "Žánry", "Herci", "Země", "Režisér/i"});
         int startRow = 1;
         for (Movie movie : movieList) {
-            Row row = excelService.getWorkBook().getSheetAt(0).createRow(startRow);
+            Row row = sheet.createRow(startRow);
             int columnCount = 0;
             excelService.createCell(row, columnCount++, movie.getId(), null);
             excelService.createCell(row, columnCount++, movie.getName(), null);

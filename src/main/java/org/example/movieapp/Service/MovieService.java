@@ -12,4 +12,5 @@ public interface MovieService extends PageReadAndWriteService<Movie>{
     PageDto<Movie> findMoviesByGenre(long id, int page, int size);
     PageDto<Movie> findMovieByCountry(long id, int page, int size);
     PageDto<Movie> findMoviesWithFilter(String nameLike, int minLength, int maxLength, LocalDate minDate, LocalDate maxDate, List<Genre> genres, List<Country> countries, List<Actor> actors, List<Director> directors, int page, int size);
+    List<Movie> findAll();
 }

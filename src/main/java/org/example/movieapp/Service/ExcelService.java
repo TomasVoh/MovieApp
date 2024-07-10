@@ -12,5 +12,5 @@ public interface ExcelService {
     void writeHeaders(String[] header);
     void createCell(Row row, int columnCount, Object value, XSSFCellStyle cellStyle);
     void initResponse(HttpServletResponse resp, String fileName);
-    Workbook getWorkBook();
+    Sheet createWorkbook(String sheetName);
 }

@@ -1,19 +1,21 @@
 package org.example.movieapp.Controller;
 
+import jakarta.persistence.CollectionTable;
+import jakarta.servlet.http.HttpServletResponse;
 import org.example.movieapp.Dto.PageDto;
 import org.example.movieapp.Model.Actor;
 import org.example.movieapp.Model.Country;
+import org.example.movieapp.Model.Movie;
 import org.example.movieapp.Model.UserEntity;
-import org.example.movieapp.Service.ActorService;
-import org.example.movieapp.Service.CountryService;
-import org.example.movieapp.Service.ImageService;
-import org.example.movieapp.Service.UserEntityService;
+import org.example.movieapp.Service.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -21,22 +23,36 @@ import java.util.List;
 public class ActorController {
     private ActorService actorService;
     private UserEntityService userEntityService;
+    private ActorImportExportService actorImportExportService;
     private CountryService countryService;
+    private MovieService movieService;
     private ImageService imageService;
 
-    public ActorController(ActorService actorService, UserEntityService userEntityService, CountryService countryService, ImageService imageService) {
+    public ActorController(ActorService actorService, UserEntityService userEntityService, ActorImportExportService actorImportExportService, CountryService countryService, MovieService movieService, ImageService imageService) {
         this.actorService = actorService;
         this.userEntityService = userEntityService;
+        this.actorImportExportService = actorImportExportService;
         this.countryService = countryService;
+        this.movieService = movieService;
         this.imageService = imageService;
     }
 
     @GetMapping
     public String findAllActors(@RequestParam(name = "pageNum", required = false, defaultValue = "0") int pageNum,
                                 @RequestParam(name = "pageSize", required = false, defaultValue = "25") int pageSize,
+                                @RequestParam(name = "name", required = false) String name,
+                                @RequestParam(name = "surname", required = false) String surname,
+                                @RequestParam(name = "startDate", required = false) LocalDate startDate,
+                                @RequestParam(name = "endDate", required = false) LocalDate endDate,
+                                @RequestParam(name = "countries", required = false) List<Country> countries,
+                                @RequestParam(name = "movies", required = false) List<Movie> movies,
                                 Model model) {
-        PageDto<Actor> actorPageDto = actorService.findAllByPage(pageNum, pageSize);
+        PageDto<Actor> actorPageDto = actorService.findActorsWithFilter(name, surname, startDate, endDate, countries, movies, pageNum, pageSize);
+        List<Movie> movieList = movieService.findAll();
+        List<Country> countryList = countryService.findAll();
         model.addAttribute("actorsPage", actorPageDto);
+        model.addAttribute("movies", movieList);
+        model.addAttribute("countries", countryList);
         return "actors-list";
     }
 
@@ -79,5 +95,11 @@ public class ActorController {
     public String editActor(@PathVariable("id") long id, @ModelAttribute("actor") Actor actor) {
         actorService.save(actor);
         return String.format("redirect:/actor/%d", id);
+    }
+
+    @GetMapping("/export/excel")
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public void exportExcel(HttpServletResponse response) {
+        actorImportExportService.exportToExcel(response);
     }
 }
