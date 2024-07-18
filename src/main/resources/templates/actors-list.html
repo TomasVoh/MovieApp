@@ -5,6 +5,7 @@
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
     <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script defer th:src="@{/script/upload.js}"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <title>Herci</title>
 </head>
@@ -15,9 +16,13 @@
             <div>
                 <div sec:authorize="hasAnyAuthority('ADMIN', 'EDITOR')" class="d-flex flex-row">
                     <a href="/actor/new" class="btn me-2">Přidat herce</a>
-                    <div>
+                    <div class="me-2">
                         <a th:href="@{/actor/export/excel}" class="btn"><span class="material-symbols-outlined">download</span></a>
                     </div>
+                    <form id="uploadForm" enctype="multipart/form-data" th:action="@{/actor/import/excel}" method="POST">
+                        <label class="btn" for="upload"><span class="material-symbols-outlined">upload</span></label>
+                        <input style="display: none" type="file" name="file" id="upload">
+                    </form>
                 </div>
                 <div class="accordion my-3" id="accordion">
                     <div class="accordion-item">
@@ -31,35 +36,35 @@
                                 <div class="accordion-body">
                                     <div>
                                         <label for="name" class="form-label">Jméno Herce</label>
-                                        <input th:text="${param.name}" type="text" name="name" id="name" class="form-control">
+                                        <input th:value="${param.name}" type="text" name="name" id="name" class="form-control">
                                     </div>
                                     <div>
                                         <label for="surname" class="form-label">Přijmení Herce</label>
-                                        <input th:text="${param.surname}" type="text" name="surname" id="surname" class="form-control">
+                                        <input th:value="${param.surname}" type="text" name="surname" id="surname" class="form-control">
                                     </div>
                                     <div>
                                         <p class="text-light">Datum narození</p>
                                         <div class="row">
                                             <div class="col">
                                                 <label for="start">Od</label>
-                                                <input class="form-control" type="date" name="startDate" id="start">
+                                                <input th:value="${param.startDate}" class="form-control" type="date" name="startDate" id="start">
                                             </div>
                                             <div class="col">
                                                 <label for="end">Do</label>
-                                                <input class="form-control" type="date" name="endDate" id="end">
+                                                <input th:value="${param.endDate}" class="form-control" type="date" name="endDate" id="end">
                                             </div>
                                         </div>
                                     </div>
                                     <div>
                                         <label for="countries">Země</label>
                                         <select class="form-control" id="countries" name="countries" multiple>
-                                            <option th:each="country : ${countries}" th:text="${country.code}" th:value="${country.id}"></option>
+                                            <option th:selected="${countriesParam != null && countriesParam.contains(country) ? true : false }" th:each="country : ${countries}" th:text="${country.code}" th:value="${country.id}"></option>
                                         </select>
                                     </div>
                                     <div>
                                         <label for="movies">Filmy</label>
                                         <select name="movies" id="movies" multiple class="form-control">
-                                            <option th:value="${movie.id}" th:each="movie : ${movies}" th:text="${movie.name}"></option>
+                                            <option th:selected="${moviesParam != null && moviesParam.contains(movie) ? true : false}" th:value="${movie.id}" th:each="movie : ${movies}" th:text="${movie.name}"></option>
                                         </select>
                                     </div>
                                 </div>

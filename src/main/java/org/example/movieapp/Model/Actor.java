@@ -51,4 +51,15 @@ public class Actor {
     public String toString() {
         return String.valueOf(id);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        Actor actor = (Actor) o;
+        if(actor.getName().equals(this.getName()) && actor.getSurname().equals(this.getSurname())
+        && actor.getBirthday().equals(this.getBirthday()) && actor.getMovies().equals(this.getMovies()) &&
+        actor.getCountries().equals(this.getCountries())) {
+            return true;
+        }
+        return false;
+    }
 }

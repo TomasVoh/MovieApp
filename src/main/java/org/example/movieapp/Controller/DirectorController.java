@@ -1,14 +1,10 @@
 package org.example.movieapp.Controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.example.movieapp.Dto.PageDto;
+import org.example.movieapp.Model.*;
 import org.example.movieapp.Model.Director;
-import org.example.movieapp.Model.Country;
-import org.example.movieapp.Model.Director;
-import org.example.movieapp.Model.UserEntity;
-import org.example.movieapp.Service.CountryService;
-import org.example.movieapp.Service.DirectorService;
-import org.example.movieapp.Service.ImageService;
-import org.example.movieapp.Service.UserEntityService;
+import org.example.movieapp.Service.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -25,20 +22,36 @@ public class DirectorController {
     private UserEntityService userEntityService;
     private ImageService imageService;
     private CountryService countryService;
+    private MovieService movieService;
+    private DirectorImportExportService directorImportExportService;
 
-    public DirectorController(DirectorService directorService, UserEntityService userEntityService, ImageService imageService, CountryService countryService) {
+    public DirectorController(DirectorService directorService, UserEntityService userEntityService, ImageService imageService, CountryService countryService, MovieService movieService, DirectorImportExportService directorImportExportService) {
         this.directorService = directorService;
         this.userEntityService = userEntityService;
         this.imageService = imageService;
         this.countryService = countryService;
+        this.movieService = movieService;
+        this.directorImportExportService = directorImportExportService;
     }
 
     @GetMapping
     public String findDirectorPage(@RequestParam(name = "pageNum", required = false, defaultValue = "0") int pageNum,
                                    @RequestParam(name = "pageSize", required = false, defaultValue = "25") int pageSize,
+                                   @RequestParam(name = "name", required = false) String name,
+                                   @RequestParam(name = "surname", required = false) String surname,
+                                   @RequestParam(name = "startDate",  required = false) LocalDate startDate,
+                                   @RequestParam(name = "endDate", required = false) LocalDate endDate,
+                                   @RequestParam(name = "movies", required = false) List<Movie> movies,
+                                   @RequestParam(name = "countries", required = false) List<Country> countries,
                                    Model model) {
-        PageDto<Director> directorList = directorService.findAllByPage(pageNum, pageSize);
+        PageDto<Director> directorList = directorService.findDirectorsWithFilter(name, surname, startDate, endDate, movies, countries,pageNum, pageSize);
+        List<Country> countryList = countryService.findAll();
+        List<Movie> movieList = movieService.findAll();
         model.addAttribute("directorsPage", directorList);
+        model.addAttribute("movies", movieList);
+        model.addAttribute("moviesParam", movies);
+        model.addAttribute("countries", countryList);
+        model.addAttribute("countriesParam", countries);
         return "director-list";
     }
 
@@ -87,5 +100,11 @@ public class DirectorController {
     public String editDirector(@ModelAttribute("actor") Director director, @PathVariable("id") long id) {
         directorService.save(director);
         return String.format("redirect:/director/%d", id);
+    }
+
+    @GetMapping("/export/excel")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'EDITOR')")
+    public void exportToExcel(HttpServletResponse response) {
+        directorImportExportService.exportToExcel(response);
     }
 }

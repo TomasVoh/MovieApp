@@ -1,16 +1,21 @@
 package org.example.movieapp.Service.Impl;
 
 import org.example.movieapp.Dto.PageDto;
+import org.example.movieapp.Filters.DirectorSpecificationFilter;
 import org.example.movieapp.Mapper.PageMapper;
+import org.example.movieapp.Model.Country;
 import org.example.movieapp.Model.Director;
+import org.example.movieapp.Model.Movie;
 import org.example.movieapp.Repository.DirectorRepository;
 import org.example.movieapp.Service.DirectorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -48,5 +53,18 @@ public class DirectorServiceImpl implements DirectorService {
     @Override
     public List<Director> findAll() {
         return directorRepository.findAll();
+    }
+
+    @Override
+    public PageDto<Director> findDirectorsWithFilter(String name, String surname, LocalDate startDate, LocalDate endDate, List<Movie> movies, List<Country> countries, int pageNum, int pageSize) {
+        Specification<Director> directorSpecification = Specification.where(name != null ? DirectorSpecificationFilter.nameLike(name) : null)
+                .and(surname != null ? DirectorSpecificationFilter.surnameLike(surname) : null)
+                .and(startDate != null && endDate != null ? DirectorSpecificationFilter.birthdayInterval(startDate, endDate) : null)
+                .and(movies != null ? DirectorSpecificationFilter.movieEquals(movies) : null)
+                .and(countries != null ? DirectorSpecificationFilter.countryEquals(countries) : null);
+        Page<Director> directorPage = directorRepository.findAll(directorSpecification, PageRequest.of(pageNum, pageSize));
+        PageDto<Director> pageDirectorDto = PageMapper.pageMapper(directorPage);
+        logger.trace("pageFilteredDto: {}", pageDirectorDto);
+        return pageDirectorDto;
     }
 }

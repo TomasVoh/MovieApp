@@ -53,6 +53,8 @@ public class ActorController {
         model.addAttribute("actorsPage", actorPageDto);
         model.addAttribute("movies", movieList);
         model.addAttribute("countries", countryList);
+        model.addAttribute("countriesParam", countries);
+        model.addAttribute("moviesParam", movies);
         return "actors-list";
     }
 
@@ -98,8 +100,15 @@ public class ActorController {
     }
 
     @GetMapping("/export/excel")
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EDITOR')")
     public void exportExcel(HttpServletResponse response) {
         actorImportExportService.exportToExcel(response);
+    }
+
+    @PostMapping("/import/excel")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EDITOR')")
+    public String importExcel(@RequestParam("file") MultipartFile file) {
+        actorImportExportService.importFromExcel(file);
+        return "redirect:/actor";
     }
 }

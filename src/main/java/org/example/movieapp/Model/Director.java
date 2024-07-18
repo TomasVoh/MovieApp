@@ -48,4 +48,17 @@ public class Director {
     public String toString() {
         return String.valueOf(id);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        Director director = (Director) o;
+        if(director.getName().equals(this.getName()) &&
+        director.getSurname().equals(this.getSurname()) &&
+        director.getDateOfBirth().equals(this.getDateOfBirth()) &&
+        director.getCountries().equals(this.getCountries()) &&
+        director.getMovies().equals(this.getMovies())) {
+            return true;
+        }
+        return false;
+    }
 }
