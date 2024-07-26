@@ -107,4 +107,11 @@ public class DirectorController {
     public void exportToExcel(HttpServletResponse response) {
         directorImportExportService.exportToExcel(response);
     }
+
+    @PostMapping("import/excel")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'EDITOR')")
+    public String importFromExcel(@RequestParam("file") MultipartFile file) {
+        directorImportExportService.importFromExcel(file);
+        return "redirect:/director";
+    }
 }

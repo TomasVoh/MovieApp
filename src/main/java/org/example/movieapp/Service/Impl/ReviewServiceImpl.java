@@ -58,4 +58,11 @@ public class ReviewServiceImpl implements ReviewService {
         logger.trace("averageRating: {}", averageRating);
         return averageRating;
     }
+
+    @Override
+    public void delete(long id) {
+        Review review = findById(id);
+        logger.trace("deleted review {}", review);
+        reviewRepository.delete(review);
+    }
 }

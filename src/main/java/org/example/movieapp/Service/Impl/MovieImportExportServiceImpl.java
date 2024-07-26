@@ -76,7 +76,7 @@ public class MovieImportExportServiceImpl implements MovieImportExportService {
             for (int i = 1; i <= sheet.getLastRowNum(); i++) {
                 Row row = sheet.getRow(i);
                 if(row == null) {
-                    return;
+                    continue;
                 }
                 logger.info(String.valueOf(i));
                 Movie movie = new Movie();
@@ -100,7 +100,7 @@ public class MovieImportExportServiceImpl implements MovieImportExportService {
                     if(oldMovie != null) {
                         if(oldMovie.equals(movie)) {
                             logger.info("žádná editace");
-                            return;
+                            break;
                         } else {
                             logger.info("editace");
                             movie.setId(oldMovie.getId());

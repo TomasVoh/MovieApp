@@ -14,6 +14,8 @@ import org.example.movieapp.Repository.DirectorRepository;
 import org.example.movieapp.Repository.MovieRepository;
 import org.example.movieapp.Service.DirectorImportExportService;
 import org.example.movieapp.Service.ExcelService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,6 +30,7 @@ public class DirectorImportExportServiceImpl implements DirectorImportExportServ
     private ExcelService excelService;
     private DirectorRepository directorRepository;
     private MovieRepository movieRepository;
+    private Logger logger = LoggerFactory.getLogger(DirectorImportExportServiceImpl.class);
     private CountryRepository countryRepository;
 
     public DirectorImportExportServiceImpl(ExcelService excelService, DirectorRepository directorRepository, CountryRepository countryRepository, MovieRepository movieRepository) {
@@ -76,13 +79,14 @@ public class DirectorImportExportServiceImpl implements DirectorImportExportServ
                 director.setCountries(Arrays.stream(row.getCell(5).getStringCellValue().split(", ")).map(id -> countryRepository.findById(Long.parseLong(id)).orElseThrow(NoSuchElementException::new)).collect(Collectors.toList()));
                 director.setMovies(Arrays.stream(row.getCell(6).getStringCellValue().split(", ")).map(id -> movieRepository.findById(Long.parseLong(id)).orElseThrow(NoSuchElementException::new)).collect(Collectors.toList()));
                 if(row.getCell(0) != null) {
-                    Director oldDirector = directorRepository.findById(Long.parseLong(row.getCell(0).getStringCellValue())).orElseThrow(NoSuchElementException::new);
+                    Director oldDirector = directorRepository.findById((long) row.getCell(0).getNumericCellValue()).orElseThrow(NoSuchElementException::new);
                     if(oldDirector.equals(director)) {
-                        return;
+                        continue;
                     } else {
                         director.setId(oldDirector.getId());
                     }
                 }
+                logger.info("ahoj");
                 directorRepository.save(director);
             }
         } catch (IOException e) {

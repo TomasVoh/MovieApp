@@ -104,7 +104,7 @@
                         <span th:each="genre : ${movie.getGenres()}" th:text="${genre.name}" class="badge mx-1"></span>
                     </div>
                     <p style="color: #ebeb05" class="mx-2" sec:authorize="hasAnyAuthority('ADMIN')" th:text="'ID: ' + ${movie.id}"></p>
-                    <img th:src="@{/{path}(path=${movie.imagePath})}" class="card-img-top" alt="film">
+                    <img th:src="@{/img/{name}(name=${movie.imagePath})}" class="card-img-top" alt="film">
                     <div class="card-body">
                         <h5 class="card-title" th:text="${movie.name}"></h5>
                         <a th:href="@{/movie/{id}(id=${movie.id})}" class="btn">Zobrazit detail</a>

@@ -1,6 +1,5 @@
 package org.example.movieapp.Controller;
 
-import jakarta.persistence.CollectionTable;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.movieapp.Dto.PageDto;
 import org.example.movieapp.Model.Actor;

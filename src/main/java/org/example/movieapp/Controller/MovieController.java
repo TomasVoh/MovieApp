@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,9 +30,10 @@ public class MovieController {
     private MovieImportExportService movieImportExportService;
     private CountryService countryService;
     private ImageService imageService;
+    private MailService mailService;
     private Logger logger = LoggerFactory.getLogger(MovieController.class);
 
-    public MovieController(MovieService movieService, GenreService genreService, ReviewService reviewService, UserEntityService userEntityService, DirectorService directorService, ActorService actorService, MovieImportExportService movieImportExportService, CountryService countryService, ImageService imageService) {
+    public MovieController(MovieService movieService, GenreService genreService, ReviewService reviewService, UserEntityService userEntityService, DirectorService directorService, ActorService actorService, MovieImportExportService movieImportExportService, CountryService countryService, ImageService imageService, MailService mailService) {
         this.movieService = movieService;
         this.genreService = genreService;
         this.reviewService = reviewService;
@@ -43,6 +43,7 @@ public class MovieController {
         this.movieImportExportService = movieImportExportService;
         this.countryService = countryService;
         this.imageService = imageService;
+        this.mailService = mailService;
     }
 
 
@@ -190,6 +191,14 @@ public class MovieController {
         review.setUser(userEntity);
         reviewService.save(review);
         return String.format("redirect:/movie/%d", id);
+    }
+
+    @PostMapping("/{movieId}/review/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EDITOR')")
+    public String deleteReview(@PathVariable("id") long reviewId, @PathVariable("movieId") long movieId, @RequestParam("email") String email) {
+        reviewService.delete(reviewId);
+        mailService.sendEmail("Smazání recenze", "Vaše recenze byla smazána", email);
+        return "redirect:/movie/%d".formatted(movieId);
     }
 
     @GetMapping("/export/excel")

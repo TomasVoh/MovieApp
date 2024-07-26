@@ -5,6 +5,7 @@
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
     <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script defer type="text/javascript" th:src="@{/script/upload.js}"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <title>Režiséři</title>
 </head>
@@ -13,9 +14,17 @@
 <main class="container my-2">
     <div class="">
         <div>
-            <div class="">
-                <a href="/director/new" sec:authorize="hasAnyAuthority('ADMIN', 'EDITOR')" class="btn my-1 me-2">Přidat režiséra</a>
-                <a href="/director/export/excel" class="btn"><span class="material-symbols-outlined">download</span></a>
+            <div class="d-flex flex-row">
+                <div>
+                    <a href="/director/new" sec:authorize="hasAnyAuthority('ADMIN', 'EDITOR')" class="btn me-2">Přidat režiséra</a>
+                </div>
+                <div>
+                    <a href="/director/export/excel" class="btn me-2"><span class="material-symbols-outlined">download</span></a>
+                </div>
+                <form id="uploadForm" action="/director/import/excel" method="POST" enctype="multipart/form-data">
+                    <label for="upload" class="btn"><span class="material-symbols-outlined">upload</span></label>
+                    <input style="display: none" type="file"  id="upload" name="file">
+                </form>
             </div>
             <div class="accordion my-3" id="accordion">
                 <div class="accordion-item">
@@ -72,7 +81,7 @@
         <div class="content-block row row-cols-3">
             <div th:each="director : ${directorsPage.content}" class="card p-0 mx-2 mb-3 overflow-hidden" style="width: 18rem;">
                 <p sec:authorize="hasAnyAuthority('ADMIN')" class="m-2" style="color: #ebeb05" th:text="'ID: ' + ${director.id}"></p>
-                <img th:src="@{/{path}(path=${director.imagePath})}" class="card-img-top" alt="herec">
+                <img th:src="@{/img/{name}(name=${director.imagePath})}" class="card-img-top" alt="herec">
                 <div class="card-body">
                     <h5 class="card-title" th:text="${director.name} + ' ' + ${director.surname}"></h5>
                     <a class="btn" th:href="@{/director/{id}(id=${director.id})}">Zobrazit detail</a>

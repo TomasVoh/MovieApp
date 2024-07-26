@@ -90,8 +90,7 @@ public class ActorImportExportServiceImpl implements ActorImportExportService {
                 if(row.getCell(0) != null) {
                     Actor oldActor = actorRepository.findById((long) row.getCell(0).getNumericCellValue()).orElseThrow(NoSuchElementException::new);
                     if(oldActor.equals(actor)) {
-
-                        return;
+                        continue;
                     } else {
                         actor.setId(oldActor.getId());
                     }

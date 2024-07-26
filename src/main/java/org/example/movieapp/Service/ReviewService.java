@@ -10,4 +10,5 @@ import java.math.BigDecimal;
 public interface ReviewService extends PageReadAndWriteService<Review> {
     PageDto<Review> findByMovie(int page, int size, Movie movie);
     BigDecimal findAverageRatingByMovie(long movieId);
+    void delete(long id);
 }
